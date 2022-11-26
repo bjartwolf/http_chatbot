@@ -1,2 +1,1 @@
-# http_chatbot
-Silly chatbot for talking line delimited text over TCP
+remember to use nc localhost 13000 -q 0 to get the fin package sent
