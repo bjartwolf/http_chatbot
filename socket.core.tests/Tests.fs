@@ -19,13 +19,14 @@ type FakeClientWrapper () =
        member this.Dispose() =
            ms.Dispose()
 
-type FakeTcpListener() =
+type FakeTcpListener(delay: int) =
    interface ITcpListener with
        member this.Stop(): unit = 
               ()
        member this.AcceptTcpClientAsync(ct: CancellationToken): Async<ITcpClient*IPEndPoint> = 
               async {
-                  do! Async.Sleep(100) 
+                  do! Async.Sleep(delay) 
+                  if (ct.IsCancellationRequested) then failwith "fooobar"
                   return (new FakeClientWrapper(), new IPEndPoint(1,1)) 
               }
 
@@ -36,10 +37,22 @@ type FakeTcpListener() =
 [<Fact>]
 let ``Connection controller returns a connection`` () =
     let cts = new CancellationTokenSource()
-    let fakeListener = FakeTcpListener() 
+    let fakeListener = FakeTcpListener(1) 
     let server = ListenConnections (fakeListener, cts.Token) 
     let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
     match reply with 
                     | Some (_, endpoint) -> Assert.Equal(1, endpoint.Port)
                     | _ -> failwith "fooo" 
+
+[<Fact>]
+let ``Connection failed to request within time returns none`` () =
+    let cts = new CancellationTokenSource()
+//    cts.Cancel()
+    let fakeListener = FakeTcpListener(100) 
+    let server = ListenConnections (fakeListener, cts.Token) 
+    let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
+    match reply with 
+                    | Some (_, _) -> failwith "should not be anything" 
+                    | None  -> Assert.True(true) 
+
 

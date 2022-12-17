@@ -16,7 +16,7 @@ let ListenConnections (server: ITcpListener, ct: CancellationToken) = MailboxPro
         let! msg = inbox.TryReceive(10)
         match msg with 
             | Some (GetNewConnection(reply)) -> 
-                let token = (new CancellationTokenSource(System.TimeSpan.FromMilliseconds(1))).Token
+                let token = (new CancellationTokenSource(System.TimeSpan.FromMilliseconds(50))).Token
                 try 
                     let! connection, ipEndpoint = server.AcceptTcpClientAsync(token)
                     reply.Reply(Some (connection, ipEndpoint))
