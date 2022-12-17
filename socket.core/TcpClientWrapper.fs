@@ -25,11 +25,14 @@ module TcpWrappers =
 
     type ITcpListener = 
        abstract member Start: unit -> unit
+       abstract member Stop: unit -> unit
        abstract member AcceptTcpClientAsync: CancellationToken -> Async<ITcpClient*IPEndPoint> 
 
     type TcpListenerWrapper (tcpListener: TcpListener) =
        let mutable _innerTcpLisneter = tcpListener
        interface ITcpListener with
+           member this.Stop(): unit = 
+               _innerTcpLisneter.Stop() 
            member this.AcceptTcpClientAsync(ct: CancellationToken): Async<ITcpClient*IPEndPoint> = 
                   async {
                     let! tcpClient = _innerTcpLisneter.AcceptTcpClientAsync(ct).AsTask() |> Async.AwaitTask 

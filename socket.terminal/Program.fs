@@ -4,6 +4,9 @@ open NStack
 open System.Net
 open TcpMailbox
 open ConnectionController
+open System.Threading
+open System.Net.Sockets
+open socket.core.TcpWrappers
 
 let ustr (x: string) = ustring.Make(x)
 
@@ -77,7 +80,14 @@ type Connection = { client: MailboxProcessor<lineFeed>;
 
 let mutable mailboxes: MailboxProcessor<lineFeed> list= [] 
 let mutable selectedConnection: int option = None
-let server = ListenConnections()
+let cts = new CancellationTokenSource()
+let port = 13001;
+let localAddr = IPAddress.Parse("127.0.0.1");
+let ep = new IPEndPoint(localAddr, port);
+
+let tcpListener : ITcpListener = new TcpListenerWrapper(new TcpListener(ep)) 
+
+let server = ListenConnections(tcpListener, cts.Token)
 let listenHandle = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(20), 
     fun mainloop -> mainloop.Invoke(
                 fun () -> 
