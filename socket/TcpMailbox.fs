@@ -5,11 +5,14 @@ open FSharp.Control
 open System.Threading.Tasks
 open System.Threading
 open System
+open System.IO
 
+open socket.core.TcpWrappers
 
-let readBufferAsync (bytes: byte[]) (networkStream: NetworkStream): Async<int option> = async {
+let readBufferAsync (bytes: byte[]) (networkStream: Stream): Async<int option> = async {
     try 
-        if (networkStream.CanRead && networkStream.DataAvailable) then
+        //if (networkStream.CanRead && networkStream.DataAvailable) then
+        if (networkStream.CanRead) then
             let token = (new CancellationTokenSource(TimeSpan.FromMilliseconds(5))).Token
             let! i = networkStream.ReadAsync(bytes, 0, bytes.Length, token) |> Async.AwaitTask
             return Some i
@@ -27,7 +30,7 @@ let readBufferAsync (bytes: byte[]) (networkStream: NetworkStream): Async<int op
 // TODO Consider closing both ways to close connection, but we are a server
 type ConnectionStatus = Open | Closed
 type lineFeed = MesssageToSend of string | GetRecieved of AsyncReplyChannel<string*ConnectionStatus> | GetSent of AsyncReplyChannel<string*ConnectionStatus>  | Close 
-let ListenMessages (client : TcpClient) = MailboxProcessor<lineFeed>.Start( fun inbox ->
+let ListenMessages (client : ITcpClient) = MailboxProcessor<lineFeed>.Start( fun inbox ->
     let networkStream = client.GetStream()
     let bytes: byte [] = Array.zeroCreate 4096 
     let mutable recievedString = ""
@@ -63,6 +66,7 @@ let ListenMessages (client : TcpClient) = MailboxProcessor<lineFeed>.Start( fun 
                    streamState <- Closed 
                    do! networkStream.FlushAsync() |> Async.AwaitTask
                    networkStream.Close()
+                   client.Close();
                    client.Dispose()
                    return! innerLoop()
             | None -> 

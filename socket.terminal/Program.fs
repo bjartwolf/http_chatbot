@@ -83,16 +83,16 @@ let listenHandle = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(20)
                 fun () -> 
                     let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
                     match reply with 
-                        | Some client ->
-                                        let clientWithId = { client =  ListenMessages client;
-                                                             remoteEndpoint = client.Client.RemoteEndPoint :?> IPEndPoint;
-                                                             input = ustr "";
-                                                             output = ustr ""
-                                                           }
-                                        connectionList.Add(clientWithId.remoteEndpoint)
-                                        mailboxes <- clientWithId.client :: mailboxes
-                                        selectedConnection <- Some (mailboxes.Length - 1)
-                                        leftMenu.SelectedItem <- mailboxes.Length - 1
+                        | Some (client, iPEndPoint) ->
+                                            let clientWithId = { client =  ListenMessages client;
+                                                                 remoteEndpoint = iPEndPoint;
+                                                                 input = ustr "";
+                                                                 output = ustr ""
+                                                               }
+                                            connectionList.Add(clientWithId.remoteEndpoint)
+                                            mailboxes <- clientWithId.client :: mailboxes
+                                            selectedConnection <- Some (mailboxes.Length - 1)
+                                            leftMenu.SelectedItem <- mailboxes.Length - 1
                         | None -> ());true)
                     
 
