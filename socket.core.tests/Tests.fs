@@ -30,29 +30,37 @@ type FakeTcpListener(delay: int) =
                   return (new FakeClientWrapper(), new IPEndPoint(1,1)) 
               }
 
-       member this.Start(): unit = 
-           () 
-
+       member this.Start(): unit = () 
  
 [<Fact>]
 let ``Connection controller returns a connection`` () =
     let cts = new CancellationTokenSource()
-    let fakeListener = FakeTcpListener(1) 
+    let fakeListener = FakeTcpListener(0) 
     let server = ListenConnections (fakeListener, cts.Token) 
     let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
     match reply with 
                     | Some (_, endpoint) -> Assert.Equal(1, endpoint.Port)
                     | _ -> failwith "fooo" 
+    cts.Cancel()
 
 [<Fact>]
 let ``Connection failed to request within time returns none`` () =
     let cts = new CancellationTokenSource()
-//    cts.Cancel()
-    let fakeListener = FakeTcpListener(100) 
+    let fakeListener = FakeTcpListener(20) 
     let server = ListenConnections (fakeListener, cts.Token) 
     let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
     match reply with 
                     | Some (_, _) -> failwith "should not be anything" 
                     | None  -> Assert.True(true) 
+    cts.Cancel()
 
-
+[<Fact>]
+let ``Connection stopped`` () =
+    let cts = new CancellationTokenSource()
+    cts.Cancel()
+    let fakeListener = FakeTcpListener(20) 
+    let server = ListenConnections (fakeListener, cts.Token) 
+    let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
+    match reply with 
+                    | Some (_, _) -> failwith "should not be anything" 
+                    | None  -> Assert.True(true) 
