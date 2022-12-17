@@ -13,10 +13,10 @@ type ConnectionMsg = GetNewConnection of AsyncReplyChannel< (ITcpClient*IPEndPoi
 let ListenConnections (server: ITcpListener, ct: CancellationToken) = MailboxProcessor<ConnectionMsg>.Start( fun inbox ->
     server.Start();
     let rec innerLoop () = async {
-        let! msg = inbox.TryReceive(10)
+        let! msg = inbox.TryReceive(50)
         match msg with 
             | Some (GetNewConnection(reply)) -> 
-                let token = (new CancellationTokenSource(System.TimeSpan.FromMilliseconds(5))).Token
+                let token = (new CancellationTokenSource(System.TimeSpan.FromMilliseconds(25))).Token
                 try 
                     let! connection, ipEndpoint = server.AcceptTcpClientAsync(token)
                     reply.Reply(Some (connection, ipEndpoint))

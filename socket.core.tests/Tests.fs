@@ -43,6 +43,19 @@ let ``Connection controller returns a connection`` () =
     cts.Cancel()
 
 [<Fact>]
+let ``Connection controller returns a connection even if we wait past message`` () =
+    async {
+        let cts = new CancellationTokenSource()
+        let fakeListener = FakeTcpListener(0) 
+        let server = ListenConnections (fakeListener, cts.Token) 
+        do! Async.Sleep(60)
+        let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
+        let conn,ip = reply.Value
+        Assert.Equal(1, ip.Port)
+        cts.Cancel()
+    }
+
+[<Fact>]
 let ``Connection failed to request within time returns none`` () =
     let cts = new CancellationTokenSource()
     let fakeListener = FakeTcpListener(50) 
@@ -68,13 +81,13 @@ let ``Wait 40 ms to send message should recieve value in the end `` () =
     }
 
 [<Fact>]
-let ``Wait long ms to send message should recieve value in the end `` () =
+let ``If server stops we should recieve no message`` () =
     async {
-        let cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(50))
-        let fakeListener = FakeTcpListener(20) 
+        let cts = new CancellationTokenSource()
+        cts.Cancel()
+        let fakeListener = FakeTcpListener(50) 
         let server = ListenConnections (fakeListener, cts.Token) 
-        do! Async.Sleep(100)
-        let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
+        let reply = server.TryPostAndReply((fun channel -> (GetNewConnection channel)),20)
         Assert.Equal(None, reply)
     }
 
