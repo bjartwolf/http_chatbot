@@ -55,6 +55,7 @@ let ``Read when nothing is there works`` () =
         let fakeClient = new FakeClientWrapper()
 
         let foo = ListenMessages (fakeClient)
+        do! Async.Sleep(100)
         let (recievedData,status)= foo.PostAndReply(fun channel -> (GetRecieved channel))
         
         Assert.Equal("", recievedData)
