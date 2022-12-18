@@ -17,7 +17,7 @@ type IdleStream () =
    override this.Read(buffer: byte[], offset:int, count: int) = (Task.Delay(TimeSpan.FromSeconds(5))).GetAwaiter().GetResult(); 0 
    override this.ReadAsync(buffer: byte[], offset:int, count: int, cancellationToken: CancellationToken): Task<int> = 
     let foo = async {
-      do! Async.Sleep(10)
+      do! Async.Sleep(1000000)
       return 0
     }
     Async.StartAsTask<int>(foo, TaskCreationOptions.AttachedToParent, cancellationToken) 
