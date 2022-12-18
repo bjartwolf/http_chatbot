@@ -30,7 +30,7 @@ type IdleStream () =
                           and set (value) = failwith "no set pos" 
    override this.Flush() = ()
 
-type ReadableStream() =
+type ReadableEmptyStream() =
    inherit Stream()
    override this.CanRead with get () = true 
    override this.CanSeek with get () = false 
@@ -57,20 +57,27 @@ type FakeClientWrapper (stream: Stream) =
 
 
 [<Fact>]
-let ``Write something returns the same and a newline`` () =
+let ``If reading zero bytes the recieved bytes are empty`` () =
      async {
-        0
-        //let message = "foo"
-        //let fakeClient = new FakeClientWrapper()
-        //let foo = ListenMessages (fakeClient)
-        //foo.Post(MesssageToSend(message))
+        let message = "foo"
+        let fakeClient = new FakeClientWrapper(new ReadableEmptyStream())
+        let foo = ListenMessages (fakeClient)
+        let (recievedData,status)= foo.PostAndReply(fun channel -> (GetRecieved channel))
         
-        //let ms = fakeClient.GetMs() 
-        //ms.Position <- 0
-        //let tr = new StreamReader(ms)
-        //let foo = tr.ReadToEnd()
-        //Assert.Equal(foo, message+System.Environment.NewLine)
+        Assert.Equal(recievedData, "")
      }
+
+[<Fact>]
+let ``If reading zero bytes the stream is disposed and the mailboxprocessor closed`` () =
+     async {
+        let fakeClient = new FakeClientWrapper(new ReadableEmptyStream())
+        let foo = ListenMessages (fakeClient)
+        do! Async.Sleep(10)
+        let (recievedData,status)= foo.PostAndReply(fun channel -> (GetRecieved channel))
+        
+        Assert.Equal(Closed, status) 
+     }
+
 
 [<Fact>]
 let ``Read when nothing is there works`` () =
