@@ -14,7 +14,7 @@ type IdleStream () =
    override this.CanRead with get () = true 
    override this.CanSeek with get () = false 
    override this.CanWrite with get () = false 
-   override this.Read(buffer: byte[], offset:int, count: int) = (Task.Delay(TimeSpan.FromSeconds(5))).GetAwaiter().GetResult(); 0 
+   override this.Read(buffer: byte[], offset:int, count: int) = failwith "not using the sync one" 
    override this.ReadAsync(buffer: byte[], offset:int, count: int, cancellationToken: CancellationToken): Task<int> = 
     let foo = async {
       do! Async.Sleep(1000000)
