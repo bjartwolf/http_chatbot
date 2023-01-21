@@ -50,26 +50,26 @@ let getSelectedItem (items: IPEndPoint list) (selectedItem: IPEndPoint option): 
 
 let view (model:Model) (dispatch:Msg->unit) =
     View.page [
-//        page.menuBar [ ]
         View.window [
-            window.title "hey"
+            window.title "HTTP Chatbot"
             window.children [
-                View.listView [
+                View.frameView [
                     prop.position.x.at 0
                     prop.position.y.at 0
-                    prop.width.filled
+                    prop.width.percent 20.0
                     prop.height.filled
-                    listView.selectedItem (getSelectedItem model.Connections model.SelectedItem)
-                    listView.source (model.Connections |> List.map (fun x -> sprintf "%A:%A" x.Address x.Port))
+                    frameView.children [
+                        View.listView [
+                            prop.position.x.at 0
+                            prop.position.y.at 0
+                            prop.width.filled
+                            prop.height.filled
+                            listView.selectedItem (getSelectedItem model.Connections model.SelectedItem)
+                            listView.source (model.Connections |> List.map (fun x -> sprintf "%A:%A" x.Address x.Port))
+                        ]
+                    ]
                 ]
-                View.label [
-                    prop.position.x.center
-                    prop.position.y.at 1
-                    prop.textAlignment.left
-                    prop.color (Color.BrightYellow, Color.Green)
-                    label.text $"hei {model.Connections.Length}" 
-                ] 
-            ] 
+           ] 
         ]
     ]
 
