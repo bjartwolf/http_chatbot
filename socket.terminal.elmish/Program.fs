@@ -54,6 +54,7 @@ let view (model:Model) (dispatch:Msg->unit) =
             window.title "HTTP Chatbot"
             window.children [
                 View.frameView [
+                    frameView.title "Connections"
                     prop.position.x.at 0
                     prop.position.y.at 0
                     prop.width.percent 20.0
