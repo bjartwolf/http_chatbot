@@ -16,13 +16,14 @@ type Model = {
 
 type Msg =
     | ConnectionEstablished of IPEndPoint 
+    | ConnectionSelected of IPEndPoint 
     | Tick 
 
 module Commands =
     let listenForConnection =
         fun dispatch ->
             async {
-                do! Async.Sleep 20
+                do! Async.Sleep 100
                 let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
                 match reply with 
                     | Some (client, iPEndPoint) -> dispatch (ConnectionEstablished iPEndPoint) 
@@ -42,6 +43,7 @@ let update (msg:Msg) (model:Model) =
     match msg with 
         | Tick -> model, Commands.listenForConnection
         | ConnectionEstablished conn ->  { model with Connections = conn :: model.Connections }, Commands.listenForConnection
+        | ConnectionSelected conn -> { model with SelectedItem = Some conn } , Commands.listenForConnection
 
 let getSelectedItem (items: IPEndPoint list) (selectedItem: IPEndPoint option): int =
     match selectedItem with 
@@ -67,7 +69,34 @@ let view (model:Model) (dispatch:Msg->unit) =
                             prop.height.filled
                             listView.selectedItem (getSelectedItem model.Connections model.SelectedItem)
                             listView.source (model.Connections |> List.map (fun x -> sprintf "%A:%A" x.Address x.Port))
-                        ]
+                            listView.onSelectedItemChanged
+                                ( fun c ->
+                                    if (model.Connections.Length = 0) then 
+                                        dispatch (Tick )
+                                    else
+                                        if (c.Item <= 0) then
+                                            dispatch (Tick )
+                                        else 
+                                            let selectedConnection = model.Connections.[c.Item-1]
+                                            dispatch (ConnectionSelected selectedConnection)
+                                )
+                         ]
+                    ]
+                ]
+                View.frameView [
+                    frameView.title $"{model.SelectedItem}"
+                    prop.position.x.at 20
+                    prop.position.y.at 0
+                    prop.width.percent 80.0
+                    prop.height.filled
+                    frameView.children [
+                        View.textField [
+                            prop.position.x.at 0
+                            prop.position.y.at 0
+                            prop.width.filled
+                            prop.height.filled
+                            textField.text "foo"
+                       ]
                     ]
                 ]
            ] 
