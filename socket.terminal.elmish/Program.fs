@@ -45,8 +45,8 @@ let update (msg:Msg) (model:Model) =
 
 let getSelectedItem (items: IPEndPoint list) (selectedItem: IPEndPoint option): int =
     match selectedItem with 
-        | None -> 0
-        | Some c -> (items |> List.findIndex ( fun c -> c = c))
+        | None -> 0 
+        | Some selected -> (items |> List.findIndex ( fun c -> c = selected))
 
 let view (model:Model) (dispatch:Msg->unit) =
     View.page [
