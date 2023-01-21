@@ -10,6 +10,7 @@ let server = Server.server
 // The model with the server object, not very immutable is it... 
 type Model = {
     Connections: IPEndPoint list 
+    SelectedItem: IPEndPoint option
 //    Server: MailboxProcessor<ConnectionController.ConnectionMsg>
 }
 
@@ -33,6 +34,7 @@ module Commands =
 let init () : Model * Cmd<Msg> =
     let model = {
         Connections = [] 
+        SelectedItem = None 
     }
     model, Commands.listenForConnection 
 
@@ -40,6 +42,11 @@ let update (msg:Msg) (model:Model) =
     match msg with 
         | Tick -> model, Commands.listenForConnection
         | ConnectionEstablished conn ->  { model with Connections = conn :: model.Connections }, Commands.listenForConnection
+
+let getSelectedItem (items: IPEndPoint list) (selectedItem: IPEndPoint option): int =
+    match selectedItem with 
+        | None -> 0
+        | Some c -> (items |> List.findIndex ( fun c -> c = c))
 
 let view (model:Model) (dispatch:Msg->unit) =
     View.page [
@@ -52,6 +59,7 @@ let view (model:Model) (dispatch:Msg->unit) =
                     prop.position.y.at 0
                     prop.width.filled
                     prop.height.filled
+                    listView.selectedItem (getSelectedItem model.Connections model.SelectedItem)
                     listView.source (model.Connections |> List.map (fun x -> sprintf "%A:%A" x.Address x.Port))
                 ]
                 View.label [
