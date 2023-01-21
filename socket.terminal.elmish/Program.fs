@@ -16,18 +16,28 @@ type Msg =
     | ConnectionEstablished of IPEndPoint 
     | Tick 
 
+module Commands =
+    let listenForConnection =
+        fun dispatch ->
+            async {
+                do! Async.Sleep 20
+                dispatch Tick 
+            }
+            |> Async.StartImmediate
+        |> Cmd.ofSub
+
 let init () : Model * Cmd<Msg> =
     let model = {
         Connections = [] 
         Server = Server.server 
     }
-    model, Cmd.none
+    model, Commands.listenForConnection 
 
 let update (msg:Msg) (model:Model) =
     let reply = model.Server.PostAndReply(fun channel -> (GetNewConnection channel))
     match reply with 
-        | Some (client, iPEndPoint) -> { model with Connections = iPEndPoint :: model.Connections } , Cmd.none
-        | None -> model, Cmd.none 
+        | Some (client, iPEndPoint) -> { model with Connections = iPEndPoint :: model.Connections } , Commands.listenForConnection 
+        | None -> model, Commands.listenForConnection 
 
 let view (model:Model) (dispatch:Msg->unit) =
     View.page [
@@ -41,12 +51,6 @@ let view (model:Model) (dispatch:Msg->unit) =
                 prop.color (Color.BrightYellow, Color.Green)
                 label.text $"hei {model.Connections.Length}" 
             ] 
-            View.button [
-                prop.position.x.center
-                prop.position.y.at 4
-                label.text "Refresh"
-                prop.onKeyDown (fun _ -> dispatch (Tick))
-            ]
         ] 
     ]
 
