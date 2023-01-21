@@ -43,19 +43,29 @@ let update (msg:Msg) (model:Model) =
 
 let view (model:Model) (dispatch:Msg->unit) =
     View.page [
-        page.menuBar [
-        ]
-        prop.children [
-            View.label [
-                prop.position.x.center
-                prop.position.y.at 1
-                prop.textAlignment.left
-                prop.color (Color.BrightYellow, Color.Green)
-                label.text $"hei {model.Connections.Length}" 
+//        page.menuBar [ ]
+        View.window [
+            window.title "hey"
+            window.children [
+                View.listView [
+                    prop.position.x.at 0
+                    prop.position.y.at 0
+                    prop.width.filled
+                    prop.height.filled
+                    listView.source (model.Connections |> List.map (fun x -> sprintf "%A:%A" x.Address x.Port))
+                ]
+                View.label [
+                    prop.position.x.center
+                    prop.position.y.at 1
+                    prop.textAlignment.left
+                    prop.color (Color.BrightYellow, Color.Green)
+                    label.text $"hei {model.Connections.Length}" 
+                ] 
             ] 
-        ] 
+        ]
     ]
 
+// Should to the "program with subscription thing here to wire in the servercommand-thingy
 Program.mkProgram init update view  
 |> Program.run
 
