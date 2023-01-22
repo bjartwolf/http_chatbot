@@ -179,9 +179,9 @@ let view (model:Model) (dispatch:Msg->unit) =
 let timerSubscription dispatch =
     let rec loop () =
         async {
+            dispatch Tack 
             do! Async.Sleep 20
             dispatch Tick 
-            dispatch Tack 
             return! loop ()
         }
     loop () |> Async.Start
