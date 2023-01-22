@@ -123,7 +123,7 @@ let view (model:Model) (dispatch:Msg->unit) =
                                 prop.width.filled
                                 prop.height.filled
                                 textView.readOnly true 
-                                textField.text "foo" ]
+                                textField.text model.SelectedConnectionRecieved ]
 
                             View.textView [
                                 prop.position.x.at 0
@@ -131,13 +131,13 @@ let view (model:Model) (dispatch:Msg->unit) =
                                 prop.width.filled
                                 prop.height.filled
                                 textView.readOnly true 
-                                textField.text model.SelectedConnectionRecieved ]
+                                textField.text model.SelectedConnectionSent ]
                             View.textField [
                                 prop.position.x.at 0
                                 prop.position.y.percent 90.0
                                 prop.width.filled
                                 prop.height.filled
-                                textField.text model.SelectedConnectionSent ]
+                                textField.text "foo" ]
                     ]
                 ]
            ] 
