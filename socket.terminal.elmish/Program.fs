@@ -15,6 +15,7 @@ type Model = {
     SelectedItem: Connection option
     SelectedConnectionSent: string
     SelectedConnectionRecieved: string
+    TextToSend: string
 }
 
 type Msg =
@@ -22,7 +23,9 @@ type Msg =
     | ConnectionSelected of Connection 
     | ConnectionDataReceived of string*string*ConnectionStatus*ConnectionStatus
     | Tick 
+    | SendText 
     | Tack 
+    | ChangeTextToSend of string 
 
 let mutable i = 0
 module Commands =
@@ -61,6 +64,7 @@ let init () : Model * Cmd<Msg> =
         SelectedItem = None 
         SelectedConnectionSent = ""
         SelectedConnectionRecieved = ""
+        TextToSend = ""
     }
     model, Commands.listenForConnection 
 
@@ -73,6 +77,10 @@ let update (msg:Msg) (model:Model) =
         | ConnectionEstablished conn ->  { model with Connections = (List.append model.Connections [conn]) }, Commands.getSentAndRecieved conn 
         | ConnectionSelected conn -> { model with SelectedItem = Some conn } , Commands.getSentAndRecieved conn 
         | ConnectionDataReceived (recievedData,sentData,_,_) -> { model with SelectedConnectionRecieved = recievedData; SelectedConnectionSent = sentData}, Cmd.none
+        | ChangeTextToSend text -> {model with TextToSend = text}, Cmd.none
+        | SendText -> match model.SelectedItem with
+                        | None -> model, Cmd.none
+                        | Some c -> {model with TextToSend = ""}, Commands.sendData c model.TextToSend
 
 let getSelectedItem (connections: Connection list) (selectedConnection: Connection option): int =
     let foo = match selectedConnection with 
@@ -152,11 +160,14 @@ let view (model:Model) (dispatch:Msg->unit) =
                                 prop.position.y.percent 90.0
                                 prop.width.filled
                                 prop.height.filled
-                                textField.text "foo" ]
+                                textField.text model.TextToSend 
+                                textField.onTextChanging (fun text -> dispatch (ChangeTextToSend text))
+                            ]
                             View.button [
                                 button.text "Send" 
                                 prop.position.x.at 0
                                 prop.position.y.percent 95.0
+                                button.onClick (fun () -> dispatch SendText)
                             ]
                     ]
                 ]
