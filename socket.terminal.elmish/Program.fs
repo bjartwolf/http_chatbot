@@ -42,13 +42,14 @@ let init () : Model * Cmd<Msg> =
 let update (msg:Msg) (model:Model) =
     match msg with 
         | Tick -> model, Commands.listenForConnection
-        | ConnectionEstablished conn ->  { model with Connections = model.Connections @ [conn]}, Cmd.none 
+        | ConnectionEstablished conn ->  { model with Connections = (List.append model.Connections [conn]) }, Cmd.none 
         | ConnectionSelected conn -> { model with SelectedItem = Some conn } , Cmd.none 
 
 let getSelectedItem (items: IPEndPoint list) (selectedItem: IPEndPoint option): int =
-    match selectedItem with 
+    let foo = match selectedItem with 
         | None -> 0 
         | Some selected -> (items |> List.findIndex ( fun c -> c = selected))
+    foo
 
 let view (model:Model) (dispatch:Msg->unit) =
     View.page [
@@ -67,13 +68,15 @@ let view (model:Model) (dispatch:Msg->unit) =
                             prop.position.y.at 0
                             prop.width.filled
                             prop.height.filled
-                            listView.selectedItem (getSelectedItem model.Connections model.SelectedItem)
+//                            listView.selectedItem (getSelectedItem model.Connections model.SelectedItem)
                             listView.source (model.Connections |> List.map (fun x -> sprintf "%A:%A" x.Address x.Port))
                             listView.onSelectedItemChanged
                                 ( fun c ->
                                         if (c.Item >= model.Connections.Length) then
                                             ()
-                                        else 
+                                        else if (c.Item <> 0) then 
+                                                dispatch (ConnectionSelected (model.Connections.[c.Item]))
+                                            else 
                                             let previousConnection = getSelectedItem model.Connections model.SelectedItem
                                             if previousConnection = c.Item then ()
                                             else dispatch (ConnectionSelected (model.Connections.[c.Item]))
