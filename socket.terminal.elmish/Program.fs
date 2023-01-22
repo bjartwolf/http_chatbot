@@ -24,6 +24,7 @@ type Msg =
     | ConnectionSelected of Connection 
     | ConnectionDataReceived of string*string*ConnectionStatus*ConnectionStatus
     | Tick 
+    | Tack 
 
 let mutable i = 0
 module Commands =
@@ -60,6 +61,9 @@ let init () : Model * Cmd<Msg> =
 let update (msg:Msg) (model:Model) =
     match msg with 
         | Tick -> model, Commands.listenForConnection
+        | Tack -> match model.SelectedItem with
+            | Some activeConnection ->  model, Commands.getSentAndRecieved activeConnection
+            | None -> model, Cmd.none
         | ConnectionEstablished conn ->  { model with Connections = (List.append model.Connections [conn]) }, Cmd.none 
         | ConnectionSelected conn -> { model with SelectedItem = Some conn } , Commands.getSentAndRecieved conn 
         | ConnectionDataReceived (recievedData,sentData,_,_) -> { model with SelectedConnectionRecieved = recievedData; SelectedConnectionSent = sentData}, Cmd.none
@@ -146,6 +150,7 @@ let timerSubscription dispatch =
         async {
             do! Async.Sleep 20
             dispatch Tick 
+            dispatch Tack 
             return! loop ()
         }
     loop () |> Async.Start
