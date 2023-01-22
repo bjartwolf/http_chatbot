@@ -46,6 +46,14 @@ module Commands =
             |> Async.StartImmediate
         |> Cmd.ofSub
 
+    let sendData ((client, _): Connection) (dataToSend: string) =
+        fun dispatch ->
+            async {
+                client.Post(TcpMailbox.MesssageToSend dataToSend)
+                dispatch (Tick)
+            }
+            |> Async.StartImmediate
+        |> Cmd.ofSub
 
 let init () : Model * Cmd<Msg> =
     let model = {
@@ -145,6 +153,11 @@ let view (model:Model) (dispatch:Msg->unit) =
                                 prop.width.filled
                                 prop.height.filled
                                 textField.text "foo" ]
+                            View.button [
+                                button.text "Send" 
+                                prop.position.x.at 0
+                                prop.position.y.percent 95.0
+                            ]
                     ]
                 ]
            ] 
