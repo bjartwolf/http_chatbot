@@ -2,11 +2,9 @@
 
 open Terminal.Gui.Elmish
 open System.Net
-open Terminal.Gui
 open ConnectionController
-open System
-open socket.core.TcpWrappers
 open TcpMailbox
+open Terminal.Gui
 
 type Connection = MailboxProcessor<lineFeed>*IPEndPoint
 
@@ -64,7 +62,7 @@ let update (msg:Msg) (model:Model) =
         | Tack -> match model.SelectedItem with
             | Some activeConnection ->  model, Commands.getSentAndRecieved activeConnection
             | None -> model, Cmd.none
-        | ConnectionEstablished conn ->  { model with Connections = (List.append model.Connections [conn]) }, Cmd.none 
+        | ConnectionEstablished conn ->  { model with Connections = (List.append model.Connections [conn]) }, Commands.getSentAndRecieved conn 
         | ConnectionSelected conn -> { model with SelectedItem = Some conn } , Commands.getSentAndRecieved conn 
         | ConnectionDataReceived (recievedData,sentData,_,_) -> { model with SelectedConnectionRecieved = recievedData; SelectedConnectionSent = sentData}, Cmd.none
 
@@ -117,13 +115,22 @@ let view (model:Model) (dispatch:Msg->unit) =
                     prop.width.percent 80.0
                     prop.height.filled
                     frameView.children [
-                            View.textView [
-                                prop.position.x.percent 0
-                                prop.position.y.percent 0
+                            View.scrollView [
+                                prop.position.x.at 0
+                                prop.position.y.at 0
+                                prop.height.fill 10
                                 prop.width.filled
-                                prop.height.filled
-                                textView.readOnly true 
-                                textField.text model.SelectedConnectionRecieved ]
+                                scrollView.contentSize (Size(80,80))
+                                scrollView.children [
+                                View.textView [
+                                    prop.position.x.percent 0
+                                    prop.position.y.percent 0
+                                    prop.width.filled
+                                    prop.height.filled
+                                    textView.readOnly true 
+                                    textField.text model.SelectedConnectionRecieved ]
+                                ]
+                            ]
 
                             View.textView [
                                 prop.position.x.at 0
