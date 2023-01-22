@@ -5,18 +5,20 @@ open System.Net
 open Terminal.Gui
 open ConnectionController
 open System
+open socket.core.TcpWrappers
+
+type Connection = ITcpClient*IPEndPoint
 
 let server = Server.server 
 // The model with the server object, not very immutable is it... 
 type Model = {
-    Connections: IPEndPoint list 
-    SelectedItem: IPEndPoint option
-//    Server: MailboxProcessor<ConnectionController.ConnectionMsg>
+    Connections: Connection list 
+    SelectedItem: Connection option
 }
 
 type Msg =
-    | ConnectionEstablished of IPEndPoint 
-    | ConnectionSelected of IPEndPoint 
+    | ConnectionEstablished of Connection 
+    | ConnectionSelected of Connection 
     | Tick 
 
 let mutable i = 0
@@ -26,7 +28,7 @@ module Commands =
             async {
                 let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
                 match reply with 
-                    | Some (client, iPEndPoint) -> dispatch (ConnectionEstablished iPEndPoint) 
+                    | Some x -> dispatch (ConnectionEstablished x) 
                     | None -> dispatch (Tick)
             }
             |> Async.StartImmediate
@@ -45,10 +47,10 @@ let update (msg:Msg) (model:Model) =
         | ConnectionEstablished conn ->  { model with Connections = (List.append model.Connections [conn]) }, Cmd.none 
         | ConnectionSelected conn -> { model with SelectedItem = Some conn } , Cmd.none 
 
-let getSelectedItem (items: IPEndPoint list) (selectedItem: IPEndPoint option): int =
-    let foo = match selectedItem with 
+let getSelectedItem (connections: Connection list) (selectedConnection: Connection option): int =
+    let foo = match selectedConnection with 
         | None -> 0 
-        | Some selected -> (items |> List.findIndex ( fun c -> c = selected))
+        | Some (_,selected)-> (connections|> List.findIndex ( fun (_,c) -> c = selected))
     foo
 
 let view (model:Model) (dispatch:Msg->unit) =
@@ -69,7 +71,7 @@ let view (model:Model) (dispatch:Msg->unit) =
                             prop.width.filled
                             prop.height.filled
                             listView.selectedItem (getSelectedItem model.Connections model.SelectedItem)
-                            listView.source (model.Connections |> List.map (fun x -> sprintf "%A:%A" x.Address x.Port))
+                            listView.source (model.Connections |> List.map (fun (_,x) -> sprintf "%A:%A" x.Address x.Port))
                             listView.onSelectedItemChanged
                                 ( fun c ->
                                         if (c.Item >= model.Connections.Length) then
@@ -86,7 +88,7 @@ let view (model:Model) (dispatch:Msg->unit) =
                 ]
                 View.frameView [
                     let title = match model.SelectedItem with
-                        | Some conn -> sprintf "%A:%A" conn.Address conn.Port
+                        | Some (_,conn) -> sprintf "%A:%A" conn.Address conn.Port
                         | None -> "No connection selected"
                     frameView.title title 
                     prop.position.x.at 20
@@ -115,7 +117,7 @@ let view (model:Model) (dispatch:Msg->unit) =
                                 prop.width.filled
                                 prop.height.filled
                                 textField.text "foo" ]
-       ]
+                    ]
                 ]
            ] 
         ]
