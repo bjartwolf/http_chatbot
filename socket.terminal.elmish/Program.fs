@@ -35,7 +35,7 @@ module Commands =
                 let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
                 match reply with 
                     | Some (client, endpoint) -> dispatch (ConnectionEstablished (ListenMessages client, endpoint)) 
-                    | None -> dispatch (Tick)
+                    | None -> () 
             }
             |> Async.StartImmediate
         |> Cmd.ofSub
@@ -179,9 +179,8 @@ let view (model:Model) (dispatch:Msg->unit) =
 let timerSubscription dispatch =
     let rec loop () =
         async {
-            dispatch Tack 
-            do! Async.Sleep 20
             dispatch Tick 
+            do! Async.Sleep 50
             return! loop ()
         }
     loop () |> Async.Start
