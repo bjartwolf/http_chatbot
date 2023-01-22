@@ -6,8 +6,9 @@ open Terminal.Gui
 open ConnectionController
 open System
 open socket.core.TcpWrappers
+open TcpMailbox
 
-type Connection = ITcpClient*IPEndPoint
+type Connection = MailboxProcessor<lineFeed>*IPEndPoint
 
 let server = Server.server 
 // The model with the server object, not very immutable is it... 
@@ -27,12 +28,24 @@ module Commands =
         fun dispatch ->
             async {
                 let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
+
                 match reply with 
-                    | Some x -> dispatch (ConnectionEstablished x) 
+                    | Some (client, endpoint) -> dispatch (ConnectionEstablished (ListenMessages client, endpoint)) 
                     | None -> dispatch (Tick)
             }
             |> Async.StartImmediate
         |> Cmd.ofSub
+    //let getSentAndRecieved ((client, ipEndPoint): Connection) =
+    //    fun dispatch ->
+    //        async {
+    //            let reply = client.PostAndReply(fun channel -> (GetNewConnection channel))
+    //            match reply with 
+    //                | Some x -> dispatch (ConnectionEstablished x) 
+    //                | None -> dispatch (Tick)
+    //        }
+    //        |> Async.StartImmediate
+    //    |> Cmd.ofSub
+
 
 let init () : Model * Cmd<Msg> =
     let model = {
