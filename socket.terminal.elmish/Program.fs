@@ -68,7 +68,7 @@ let view (model:Model) (dispatch:Msg->unit) =
                             prop.position.y.at 0
                             prop.width.filled
                             prop.height.filled
-//                            listView.selectedItem (getSelectedItem model.Connections model.SelectedItem)
+                            listView.selectedItem (getSelectedItem model.Connections model.SelectedItem)
                             listView.source (model.Connections |> List.map (fun x -> sprintf "%A:%A" x.Address x.Port))
                             listView.onSelectedItemChanged
                                 ( fun c ->
@@ -85,20 +85,37 @@ let view (model:Model) (dispatch:Msg->unit) =
                     ]
                 ]
                 View.frameView [
-                    frameView.title $"{model.SelectedItem}"
+                    let title = match model.SelectedItem with
+                        | Some conn -> sprintf "%A:%A" conn.Address conn.Port
+                        | None -> "No connection selected"
+                    frameView.title title 
                     prop.position.x.at 20
                     prop.position.y.at 0
                     prop.width.percent 80.0
                     prop.height.filled
                     frameView.children [
-                        View.textField [
-                            prop.position.x.at 0
-                            prop.position.y.at 0
-                            prop.width.filled
-                            prop.height.filled
-                            textField.text "foo"
-                       ]
-                    ]
+                            View.textView [
+                                prop.position.x.percent 0
+                                prop.position.y.percent 0
+                                prop.width.filled
+                                prop.height.filled
+                                textView.readOnly true 
+                                textField.text "foo" ]
+
+                            View.textView [
+                                prop.position.x.at 0
+                                prop.position.y.percent 50.0
+                                prop.width.filled
+                                prop.height.filled
+                                textView.readOnly true 
+                                textField.text "foo" ]
+                            View.textField [
+                                prop.position.x.at 0
+                                prop.position.y.percent 90.0
+                                prop.width.filled
+                                prop.height.filled
+                                textField.text "foo" ]
+       ]
                 ]
            ] 
         ]
