@@ -19,11 +19,11 @@ type Msg =
     | ConnectionSelected of IPEndPoint 
     | Tick 
 
+let mutable i = 0
 module Commands =
     let listenForConnection =
         fun dispatch ->
             async {
-                do! Async.Sleep 100
                 let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
                 match reply with 
                     | Some (client, iPEndPoint) -> dispatch (ConnectionEstablished iPEndPoint) 
@@ -42,8 +42,8 @@ let init () : Model * Cmd<Msg> =
 let update (msg:Msg) (model:Model) =
     match msg with 
         | Tick -> model, Commands.listenForConnection
-        | ConnectionEstablished conn ->  { model with Connections = conn :: model.Connections }, Commands.listenForConnection
-        | ConnectionSelected conn -> { model with SelectedItem = Some conn } , Commands.listenForConnection
+        | ConnectionEstablished conn ->  { model with Connections = model.Connections @ [conn]}, Cmd.none 
+        | ConnectionSelected conn -> { model with SelectedItem = Some conn } , Cmd.none 
 
 let getSelectedItem (items: IPEndPoint list) (selectedItem: IPEndPoint option): int =
     match selectedItem with 
@@ -71,15 +71,13 @@ let view (model:Model) (dispatch:Msg->unit) =
                             listView.source (model.Connections |> List.map (fun x -> sprintf "%A:%A" x.Address x.Port))
                             listView.onSelectedItemChanged
                                 ( fun c ->
-                                    if (model.Connections.Length = 0) then 
-                                        dispatch (Tick )
-                                    else
-                                        if (c.Item <= 0) then
-                                            dispatch (Tick )
+                                        if (c.Item >= model.Connections.Length) then
+                                            ()
                                         else 
-                                            let selectedConnection = model.Connections.[c.Item-1]
-                                            dispatch (ConnectionSelected selectedConnection)
-                                )
+                                            let previousConnection = getSelectedItem model.Connections model.SelectedItem
+                                            if previousConnection = c.Item then ()
+                                            else dispatch (ConnectionSelected (model.Connections.[c.Item]))
+                            )
                          ]
                     ]
                 ]
@@ -103,7 +101,18 @@ let view (model:Model) (dispatch:Msg->unit) =
         ]
     ]
 
+    
+let timerSubscription dispatch =
+    let rec loop () =
+        async {
+            do! Async.Sleep 20
+            dispatch Tick 
+            return! loop ()
+        }
+    loop () |> Async.Start
+
 // Should to the "program with subscription thing here to wire in the servercommand-thingy
 Program.mkProgram init update view  
-|> Program.run
+    |> Program.withSubscription (fun _ -> Cmd.ofSub timerSubscription)
+    |> Program.run
 
