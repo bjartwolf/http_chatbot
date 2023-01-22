@@ -15,11 +15,14 @@ let server = Server.server
 type Model = {
     Connections: Connection list 
     SelectedItem: Connection option
+    SelectedConnectionSent: string
+    SelectedConnectionRecieved: string
 }
 
 type Msg =
     | ConnectionEstablished of Connection 
     | ConnectionSelected of Connection 
+    | ConnectionDataReceived of string*string*ConnectionStatus*ConnectionStatus
     | Tick 
 
 let mutable i = 0
@@ -28,29 +31,29 @@ module Commands =
         fun dispatch ->
             async {
                 let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
-
                 match reply with 
                     | Some (client, endpoint) -> dispatch (ConnectionEstablished (ListenMessages client, endpoint)) 
                     | None -> dispatch (Tick)
             }
             |> Async.StartImmediate
         |> Cmd.ofSub
-    //let getSentAndRecieved ((client, ipEndPoint): Connection) =
-    //    fun dispatch ->
-    //        async {
-    //            let reply = client.PostAndReply(fun channel -> (GetNewConnection channel))
-    //            match reply with 
-    //                | Some x -> dispatch (ConnectionEstablished x) 
-    //                | None -> dispatch (Tick)
-    //        }
-    //        |> Async.StartImmediate
-    //    |> Cmd.ofSub
+    let getSentAndRecieved ((client, _): Connection) =
+        fun dispatch ->
+            async {
+                let (sentdata,statusClient)= client.PostAndReply(fun channel -> (GetRecieved channel))
+                let (recievedData,statusServer)= client.PostAndReply(fun channel -> (GetSent channel))
+                dispatch (ConnectionDataReceived (sentdata, recievedData, statusClient, statusServer))
+            }
+            |> Async.StartImmediate
+        |> Cmd.ofSub
 
 
 let init () : Model * Cmd<Msg> =
     let model = {
         Connections = [] 
         SelectedItem = None 
+        SelectedConnectionSent = ""
+        SelectedConnectionRecieved = ""
     }
     model, Commands.listenForConnection 
 
@@ -58,7 +61,8 @@ let update (msg:Msg) (model:Model) =
     match msg with 
         | Tick -> model, Commands.listenForConnection
         | ConnectionEstablished conn ->  { model with Connections = (List.append model.Connections [conn]) }, Cmd.none 
-        | ConnectionSelected conn -> { model with SelectedItem = Some conn } , Cmd.none 
+        | ConnectionSelected conn -> { model with SelectedItem = Some conn } , Commands.getSentAndRecieved conn 
+        | ConnectionDataReceived (recievedData,sentData,_,_) -> { model with SelectedConnectionRecieved = recievedData; SelectedConnectionSent = sentData}, Cmd.none
 
 let getSelectedItem (connections: Connection list) (selectedConnection: Connection option): int =
     let foo = match selectedConnection with 
@@ -123,13 +127,13 @@ let view (model:Model) (dispatch:Msg->unit) =
                                 prop.width.filled
                                 prop.height.filled
                                 textView.readOnly true 
-                                textField.text "foo" ]
+                                textField.text model.SelectedConnectionRecieved ]
                             View.textField [
                                 prop.position.x.at 0
                                 prop.position.y.percent 90.0
                                 prop.width.filled
                                 prop.height.filled
-                                textField.text "foo" ]
+                                textField.text model.SelectedConnectionSent ]
                     ]
                 ]
            ] 
