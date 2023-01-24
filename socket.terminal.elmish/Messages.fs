@@ -10,7 +10,7 @@ type Msg =
     | ConnectionDataReceived of string*string*ConnectionStatus*ConnectionStatus
     | Tick 
     | SendText 
-    | Tack 
+    | RefreshSentReceived 
     | ChangeTextToSend of string 
 
 

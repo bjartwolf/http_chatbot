@@ -19,17 +19,31 @@ let init () : Model * Cmd<Msg> =
 
 let update (msg:Msg) (model:Model) =
     match msg with 
-        | Tick -> model, Commands.listenForConnection
-        | Tack -> match model.SelectedItem with
-            | Some activeConnection ->  model, Commands.getSentAndRecieved activeConnection
-            | None -> model, Cmd.none
-        | ConnectionEstablished conn ->  { model with Connections = (List.append model.Connections [conn]) }, Commands.getSentAndRecieved conn 
-        | ConnectionSelected conn -> { model with SelectedItem = Some conn } , Commands.getSentAndRecieved conn 
-        | ConnectionDataReceived (recievedData,sentData,_,_) -> { model with SelectedConnectionRecieved = recievedData; SelectedConnectionSent = sentData}, Cmd.none
-        | ChangeTextToSend text -> {model with TextToSend = text}, Cmd.none
+        | Tick -> model, 
+                  Commands.listenForConnection
+        | RefreshSentReceived -> 
+            match model.SelectedItem with
+              | Some activeConnection ->  model, 
+                                          Commands.getSentAndRecieved activeConnection
+              | None -> model, 
+                        Cmd.none
+        | ConnectionEstablished conn ->  
+                { model with Connections = (List.append model.Connections [conn]) }, 
+                Commands.getSentAndRecieved conn 
+        | ConnectionSelected conn -> 
+                { model with SelectedItem = Some conn },
+                Commands.getSentAndRecieved conn 
+        | ConnectionDataReceived (recievedData,sentData,_,_) -> 
+                { model with SelectedConnectionRecieved = recievedData; SelectedConnectionSent = sentData},
+                Cmd.none
+        | ChangeTextToSend text -> 
+                {model with TextToSend = text},
+                Cmd.none
         | SendText -> match model.SelectedItem with
-                        | None -> model, Cmd.none
-                        | Some c -> {model with TextToSend = ""}, Commands.sendData c model.TextToSend
+                        | None -> model,
+                                  Cmd.none
+                        | Some c -> {model with TextToSend = ""}, 
+                                    Commands.sendData c model.TextToSend
 
 let view (model:Model) (dispatch:Msg->unit) =
     mainView model dispatch
