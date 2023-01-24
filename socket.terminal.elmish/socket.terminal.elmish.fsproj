@@ -9,6 +9,7 @@
     <Compile Include="Messages.fs" />
     <Compile Include="Server.fs" />
     <Compile Include="Commands.fs" />
+    <Compile Include="Model.fs" />
     <Compile Include="Views.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
