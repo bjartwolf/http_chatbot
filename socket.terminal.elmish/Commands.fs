@@ -14,7 +14,7 @@ module Commands =
                 let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
                 match reply with 
                     | Some (client, endpoint) -> dispatch (ConnectionEstablished (ListenMessages client, endpoint)) 
-                    | None -> dispatch RefreshSentReceived 
+                    | None -> () 
             }
             |> Async.StartImmediate
         |> Cmd.ofSub
