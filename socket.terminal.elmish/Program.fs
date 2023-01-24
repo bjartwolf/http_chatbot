@@ -6,10 +6,9 @@ open ConnectionController
 open TcpMailbox
 open Terminal.Gui
 open Views
+open socket.terminal
 
-type Connection = MailboxProcessor<lineFeed>*IPEndPoint
-
-let server = Server.server 
+open Messages
 // The model with the server object, not very immutable is it... 
 type Model = {
     Connections: Connection list 
@@ -19,46 +18,7 @@ type Model = {
     TextToSend: string
 }
 
-type Msg =
-    | ConnectionEstablished of Connection 
-    | ConnectionSelected of Connection 
-    | ConnectionDataReceived of string*string*ConnectionStatus*ConnectionStatus
-    | Tick 
-    | SendText 
-    | Tack 
-    | ChangeTextToSend of string 
-
 let mutable i = 0
-module Commands =
-    let listenForConnection =
-        fun dispatch ->
-            async {
-                let reply = server.PostAndReply(fun channel -> (GetNewConnection channel))
-                match reply with 
-                    | Some (client, endpoint) -> dispatch (ConnectionEstablished (ListenMessages client, endpoint)) 
-                    | None -> () 
-            }
-            |> Async.StartImmediate
-        |> Cmd.ofSub
-    let getSentAndRecieved ((client, _): Connection) =
-        fun dispatch ->
-            async {
-                let (sentdata,statusClient)= client.PostAndReply(fun channel -> (GetRecieved channel))
-                let (recievedData,statusServer)= client.PostAndReply(fun channel -> (GetSent channel))
-                dispatch (ConnectionDataReceived (sentdata, recievedData, statusClient, statusServer))
-            }
-            |> Async.StartImmediate
-        |> Cmd.ofSub
-
-    let sendData ((client, _): Connection) (dataToSend: string) =
-        fun dispatch ->
-            async {
-                client.Post(TcpMailbox.MesssageToSend dataToSend)
-                dispatch (Tick)
-            }
-            |> Async.StartImmediate
-        |> Cmd.ofSub
-
 let init () : Model * Cmd<Msg> =
     let model = {
         Connections = [] 
