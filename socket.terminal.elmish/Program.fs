@@ -5,6 +5,7 @@ open System.Net
 open ConnectionController
 open TcpMailbox
 open Terminal.Gui
+open Views
 
 type Connection = MailboxProcessor<lineFeed>*IPEndPoint
 
@@ -87,34 +88,6 @@ let getSelectedItem (connections: Connection list) (selectedConnection: Connecti
         | None -> 0 
         | Some (_,selected)-> (connections|> List.findIndex ( fun (_,c) -> c = selected))
     foo
-
-let contentView (position: int) (title: string) (content: string) = 
-    View.frameView [
-        frameView.title title 
-        prop.position.x.at 0
-        prop.position.y.percent position 
-        prop.height.percent 40.0
-        prop.width.filled
-        frameView.children [
-            View.scrollView [
-                prop.position.x.at 0
-                prop.position.y.at 0
-                prop.height.filled
-                prop.width.filled
-                scrollView.contentSize (Size(80,80))
-                scrollView.children [
-                    View.textView [
-                        prop.position.x.percent 0
-                        prop.position.y.percent 0
-                        prop.width.filled
-                        prop.height.filled
-                        textView.readOnly true 
-                        textField.text content
-                    ]
-                ]
-            ]
-        ]
-    ]
 
 let view (model:Model) (dispatch:Msg->unit) =
     View.page [
