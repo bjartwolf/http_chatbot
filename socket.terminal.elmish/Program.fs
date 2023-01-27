@@ -43,8 +43,10 @@ let update (msg:Msg) (model:Model) =
                                   Cmd.none
                         | Some c -> {model with TextToSend = ""}, 
                                     Commands.sendData c model.TextToSend
-        | ClosedCurrent -> let index = List.findIndex (fun c -> c = model.SelectedItem.Value) model.Connections  
-                           {model with Connections = List.removeAt index model.Connections}, Cmd.none
+        | ClosedCurrent -> let index = List.tryFindIndex(fun c -> c = model.SelectedItem.Value) model.Connections  
+                           match index with
+                            | Some i -> {model with Connections = List.removeAt i model.Connections}, Cmd.none
+                            | None -> model, Cmd.none 
         | CloseCurrent -> match model.SelectedItem with
                                 | None -> model, Cmd.none
                                 | Some c -> model, Commands.closeCurrent c
