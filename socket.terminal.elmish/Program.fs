@@ -43,7 +43,8 @@ let update (msg:Msg) (model:Model) =
                                   Cmd.none
                         | Some c -> {model with TextToSend = ""}, 
                                     Commands.sendData c model.TextToSend
-        | ClosedCurrent -> model, Cmd.none
+        | ClosedCurrent -> let index = List.findIndex (fun c -> c = model.SelectedItem.Value) model.Connections  
+                           {model with Connections = List.removeAt index model.Connections}, Cmd.none
         | CloseCurrent -> match model.SelectedItem with
                                 | None -> model, Cmd.none
                                 | Some c -> model, Commands.closeCurrent c
@@ -56,7 +57,7 @@ let view (model:Model) (dispatch:Msg->unit) =
 let timerSubscription dispatch =
     let rec loop () =
         async {
-            do! Async.Sleep 100
+            do! Async.Sleep 50
             dispatch Tick 
             return! loop ()
         }

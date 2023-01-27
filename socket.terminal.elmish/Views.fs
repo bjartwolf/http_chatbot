@@ -96,12 +96,6 @@ let mainView (model:Model) (dispatch:Msg->unit) =
                                 textField.onTextChanging (fun text -> dispatch (ChangeTextToSend text))
                             ]
                             View.button [
-                                button.text "Listen for more connections" 
-                                prop.position.x.at 0
-                                prop.position.y.percent 95.0
-                                button.onClick (fun () -> dispatch Tick)
-                            ]
-                            View.button [
                                 button.text "Close" 
                                 prop.position.x.at 20 
                                 prop.position.y.percent 95.0
