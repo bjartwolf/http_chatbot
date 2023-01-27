@@ -19,8 +19,6 @@ let init () : Model * Cmd<Msg> =
 
 let update (msg:Msg) (model:Model) =
     match msg with 
-        | Tick -> model, 
-                  Commands.listenForConnection
         | ConnectionEstablished conn ->  
                 { model with Connections = (conn :: model.Connections ) }, 
                 Commands.getSentAndRecieved conn 
@@ -45,6 +43,12 @@ let update (msg:Msg) (model:Model) =
                                   Cmd.none
                         | Some c -> {model with TextToSend = ""}, 
                                     Commands.sendData c model.TextToSend
+        | ClosedCurrent -> model, Cmd.none
+        | CloseCurrent -> match model.SelectedItem with
+                                | None -> model, Cmd.none
+                                | Some c -> model, Commands.closeCurrent c
+        | Tick -> model, 
+                  Commands.listenForConnection
 
 let view (model:Model) (dispatch:Msg->unit) =
     mainView model dispatch
@@ -52,12 +56,13 @@ let view (model:Model) (dispatch:Msg->unit) =
 let timerSubscription dispatch =
     let rec loop () =
         async {
+            do! Async.Sleep 1000
             dispatch Tick 
-            do! Async.Sleep 50
             return! loop ()
         }
     loop () |> Async.Start
 
 Program.mkProgram init update view  
-    |> Program.withSubscription (fun _ -> Cmd.ofSub timerSubscription)
+//    |> Program.withTrace (fun f -> Con)
+//    |> Program.withSubscription (fun _ -> Cmd.ofSub timerSubscription)
     |> Program.run

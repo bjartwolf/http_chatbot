@@ -29,5 +29,12 @@ module Commands =
                 dispatch RefreshSentReceived
         |> Cmd.ofSub
 
+    let closeCurrent ((client, _): Connection) = 
+        fun dispatch ->
+                client.Post(Close)
+                dispatch ClosedCurrent
+        |> Cmd.ofSub
+
+
 
 

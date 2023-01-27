@@ -90,17 +90,24 @@ let mainView (model:Model) (dispatch:Msg->unit) =
                                         dispatch SendText
                                         x.Handled <- true
                                     else 
+                                        x.Handled <- true
                                         ())
                                 textField.text model.TextToSend 
                                 textField.onTextChanging (fun text -> dispatch (ChangeTextToSend text))
                             ]
                             View.button [
-                                button.text "Send" 
+                                button.text "Listen for more connections" 
                                 prop.position.x.at 0
                                 prop.position.y.percent 95.0
-                                button.onClick (fun () -> dispatch SendText)
+                                button.onClick (fun () -> dispatch Tick)
                             ]
-                    ]
+                            View.button [
+                                button.text "Close" 
+                                prop.position.x.at 20 
+                                prop.position.y.percent 95.0
+                                button.onClick (fun () -> dispatch CloseCurrent)
+                            ]
+                     ]
                 ]
             ] 
         ]
