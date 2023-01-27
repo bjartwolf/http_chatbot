@@ -97,8 +97,8 @@ let mainView (model:Model) (dispatch:Msg->unit) =
                             ]
                             View.button [
                                 button.text "Close" 
-                                prop.position.x.at 20 
-                                prop.position.y.percent 95.0
+                                prop.position.x.at 0 
+                                prop.position.y.percent 95
                                 button.onClick (fun () -> dispatch CloseCurrent)
                             ]
                      ]
