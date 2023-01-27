@@ -57,18 +57,13 @@ let mainView (model:Model) (dispatch:Msg->unit) =
                             prop.position.y.at 0
                             prop.width.filled
                             prop.height.filled
-                            listView.selectedItem (getSelectedItem model.Connections model.SelectedItem)
+//                            listView.selectedItem (getSelectedItem model.Connections model.SelectedItem)
                             listView.source (model.Connections |> List.map (fun (_,x) -> sprintf "%A:%A" x.Address x.Port))
                             listView.onSelectedItemChanged
                                 ( fun c ->
                                         if (c.Item >= model.Connections.Length) then
                                             ()
-                                        else if (c.Item <> 0) then 
-                                                dispatch (ConnectionSelected (model.Connections.[c.Item]))
-                                            else 
-                                            let previousConnection = getSelectedItem model.Connections model.SelectedItem
-                                            if previousConnection = c.Item then ()
-                                            else dispatch (ConnectionSelected (model.Connections.[c.Item]))
+                                        else dispatch (ConnectionSelected (model.Connections.[c.Item]))
                             )
                          ]
                     ]
@@ -90,12 +85,17 @@ let mainView (model:Model) (dispatch:Msg->unit) =
                                 prop.position.y.percent 90.0
                                 prop.width.filled
                                 prop.height.filled
+                                prop.onKeyDown (fun (x) -> 
+                                    if x.KeyEvent.Key = Key.Enter then
+                                        dispatch SendText
+                                        x.Handled <- true
+                                    else 
+                                        ())
                                 textField.text model.TextToSend 
                                 textField.onTextChanging (fun text -> dispatch (ChangeTextToSend text))
                             ]
                             View.button [
                                 button.text "Send" 
-                                button.isDefault true
                                 prop.position.x.at 0
                                 prop.position.y.percent 95.0
                                 button.onClick (fun () -> dispatch SendText)

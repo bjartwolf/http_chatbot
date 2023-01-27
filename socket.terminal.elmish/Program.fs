@@ -21,18 +21,19 @@ let update (msg:Msg) (model:Model) =
     match msg with 
         | Tick -> model, 
                   Commands.listenForConnection
-        | RefreshSentReceived -> 
-            match model.SelectedItem with
-              | Some activeConnection ->  model, 
-                                          Commands.getSentAndRecieved activeConnection
-              | None  when not model.Connections.IsEmpty -> { model with SelectedItem = Some model.Connections.Head }, Cmd.none
-              | None -> model, Cmd.none
         | ConnectionEstablished conn ->  
                 { model with Connections = (conn :: model.Connections ) }, 
                 Commands.getSentAndRecieved conn 
         | ConnectionSelected conn -> 
                 { model with SelectedItem = Some conn },
                 Commands.getSentAndRecieved conn 
+        | RefreshSentReceived -> 
+            match model.SelectedItem with
+              | Some activeConnection ->  model, 
+                                          Commands.getSentAndRecieved activeConnection
+              | None  when not model.Connections.IsEmpty -> { model with SelectedItem = Some model.Connections.Head },
+                                                            Commands.getSentAndRecieved model.Connections.Head
+              | None -> model, Cmd.none
         | ConnectionDataReceived (recievedData,sentData,_,_) -> 
                 { model with SelectedConnectionRecieved = recievedData; SelectedConnectionSent = sentData},
                 Cmd.none

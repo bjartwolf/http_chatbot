@@ -26,7 +26,7 @@ module Commands =
     let sendData ((client, _): Connection) (dataToSend: string) =
         fun dispatch ->
                 client.Post(TcpMailbox.MesssageToSend dataToSend)
-                dispatch (Tick)
+                dispatch RefreshSentReceived
         |> Cmd.ofSub
 
 
