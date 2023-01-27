@@ -25,8 +25,8 @@ let update (msg:Msg) (model:Model) =
             match model.SelectedItem with
               | Some activeConnection ->  model, 
                                           Commands.getSentAndRecieved activeConnection
-              | None -> model, 
-                        Cmd.none
+              | None  when not model.Connections.IsEmpty -> { model with SelectedItem = Some model.Connections.Head }, Cmd.none
+              | None -> model, Cmd.none
         | ConnectionEstablished conn ->  
                 { model with Connections = (conn :: model.Connections ) }, 
                 Commands.getSentAndRecieved conn 
