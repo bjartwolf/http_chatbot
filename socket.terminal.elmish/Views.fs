@@ -95,6 +95,7 @@ let mainView (model:Model) (dispatch:Msg->unit) =
                             ]
                             View.button [
                                 button.text "Send" 
+                                button.isDefault true
                                 prop.position.x.at 0
                                 prop.position.y.percent 95.0
                                 button.onClick (fun () -> dispatch SendText)

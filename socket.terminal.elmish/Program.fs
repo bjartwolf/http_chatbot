@@ -28,7 +28,7 @@ let update (msg:Msg) (model:Model) =
               | None -> model, 
                         Cmd.none
         | ConnectionEstablished conn ->  
-                { model with Connections = (List.append model.Connections [conn]) }, 
+                { model with Connections = (conn :: model.Connections ) }, 
                 Commands.getSentAndRecieved conn 
         | ConnectionSelected conn -> 
                 { model with SelectedItem = Some conn },
