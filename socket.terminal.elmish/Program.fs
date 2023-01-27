@@ -56,7 +56,7 @@ let view (model:Model) (dispatch:Msg->unit) =
 let timerSubscription dispatch =
     let rec loop () =
         async {
-            do! Async.Sleep 1000
+            do! Async.Sleep 100
             dispatch Tick 
             return! loop ()
         }
@@ -64,5 +64,5 @@ let timerSubscription dispatch =
 
 Program.mkProgram init update view  
 //    |> Program.withTrace (fun f -> Con)
-//    |> Program.withSubscription (fun _ -> Cmd.ofSub timerSubscription)
+    |> Program.withSubscription (fun _ -> Cmd.ofSub timerSubscription)
     |> Program.run
