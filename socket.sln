@@ -9,7 +9,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket.core", "socket.core\
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket.core.tests", "socket.core.tests\socket.core.tests.fsproj", "{F77D3A8A-6F15-41CD-9F31-37D49D01250F}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket.terminal.elmish", "socket.terminal.elmish\socket.terminal.elmish.fsproj", "{FEFD7956-D796-4CB2-96EA-BC3125CC19BF}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket.terminal", "socket.terminal.elmish\socket.terminal.fsproj", "{FEFD7956-D796-4CB2-96EA-BC3125CC19BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
