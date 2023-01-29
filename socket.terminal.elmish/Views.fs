@@ -13,7 +13,7 @@ let contentView (position: int) (title: string) (content: string) =
             frameView.title title 
             prop.position.x.at 0
             prop.position.y.percent position 
-            prop.height.percent 40.0
+            prop.height.percent 45.0
             prop.width.filled
             frameView.children [
                View.textView [
@@ -23,7 +23,7 @@ let contentView (position: int) (title: string) (content: string) =
                     prop.height.sized length
                     textView.readOnly true 
                     textField.text content
-                    prop.color (Color.White, Color.Gray)
+                    prop.color (Color.White, Color.BrightBlue)
                 ]
             ]
         ]
@@ -74,10 +74,10 @@ let mainView (model:Model) (dispatch:Msg->unit) =
                     prop.height.filled
                     frameView.children [
                             contentView 0 "Request" model.SelectedConnectionRecieved
-                            contentView 50 "Response" model.SelectedConnectionSent
+                            contentView 47 "Response" model.SelectedConnectionSent
                             View.textField [
                                 prop.position.x.at 0
-                                prop.position.y.percent 90.0
+                                prop.position.y.percent 95.0
                                 prop.width.filled
                                 prop.height.filled
                                 prop.onKeyDown (fun (x) -> 
@@ -91,9 +91,15 @@ let mainView (model:Model) (dispatch:Msg->unit) =
                                 textField.onTextChanging (fun text -> dispatch (ChangeTextToSend text))
                             ]
                             View.button [
-                                button.text "Close" 
+                                button.text "Send" 
                                 prop.position.x.at 0 
-                                prop.position.y.percent 95
+                                prop.position.y.percent 99
+                                button.onClick (fun () -> dispatch SendText)
+                            ]
+                            View.button [
+                                button.text "Close" 
+                                prop.position.x.at 10 
+                                prop.position.y.percent 99
                                 button.onClick (fun () -> dispatch CloseCurrent)
                             ]
                      ]
