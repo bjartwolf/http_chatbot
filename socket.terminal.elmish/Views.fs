@@ -5,33 +5,28 @@ open Terminal.Gui
 open Messages
 
 let contentView (position: int) (title: string) (content: string) = 
+    let lines = content.Split(System.Environment.NewLine);
+    let length = lines.Length;
+    let width = lines |> Array.map (fun x -> x.Length) |> Array.max
+
     View.frameView [
-        frameView.title title 
-        prop.position.x.at 0
-        prop.position.y.percent position 
-        prop.height.percent 40.0
-        prop.width.filled
-        frameView.children [
-            View.scrollView [
-                prop.position.x.at 0
-                prop.position.y.at 0
-                prop.height.filled
-                prop.width.filled
-                scrollView.contentSize (Size(80,80))
-                scrollView.children [
-                    View.textView [
-                        prop.position.x.percent 0
-                        prop.position.y.percent 0
-                        prop.width.filled
-                        prop.height.filled
-                        textView.readOnly true 
-                        textField.text content
-                    ]
+            frameView.title title 
+            prop.position.x.at 0
+            prop.position.y.percent position 
+            prop.height.percent 40.0
+            prop.width.filled
+            frameView.children [
+               View.textView [
+                    prop.position.x.at 0
+                    prop.position.y.at 0
+                    prop.width.sized width
+                    prop.height.sized length
+                    textView.readOnly true 
+                    textField.text content
+                    prop.color (Color.White, Color.Gray)
                 ]
             ]
         ]
-    ]
-
 
 open Model
 let mainView (model:Model) (dispatch:Msg->unit) =
@@ -78,8 +73,8 @@ let mainView (model:Model) (dispatch:Msg->unit) =
                     prop.width.percent 80.0
                     prop.height.filled
                     frameView.children [
-                            contentView 0 "Client" model.SelectedConnectionRecieved
-                            contentView 50 "Server" model.SelectedConnectionSent
+                            contentView 0 "Request" model.SelectedConnectionRecieved
+                            contentView 50 "Response" model.SelectedConnectionSent
                             View.textField [
                                 prop.position.x.at 0
                                 prop.position.y.percent 90.0
