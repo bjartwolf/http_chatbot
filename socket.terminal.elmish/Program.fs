@@ -46,7 +46,7 @@ let update (msg:Msg) (model:Model) =
         | ClosedCurrent -> let index = List.tryFindIndex(fun c -> c = model.SelectedItem.Value) model.Connections  
                            match index with
                             | Some i -> {model with Connections = List.removeAt i model.Connections}, Cmd.none
-                            | None -> model, Cmd.none 
+                            | None -> { model with SelectedConnectionRecieved = ""; SelectedConnectionSent = "" }, Cmd.none 
         | CloseCurrent -> match model.SelectedItem with
                                 | None -> model, Cmd.none
                                 | Some c -> model, Commands.closeCurrent c
