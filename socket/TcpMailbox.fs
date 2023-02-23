@@ -23,7 +23,7 @@ let readBufferAsync (bytes: byte[]) (networkStream: Stream): Async<int option> =
             | :? SocketException -> return Some 0
             | :? TaskCanceledException -> return None
             | :? OperationCanceledException -> return None
-            | ex -> printfn "Some unknown exception  %A" ex
+            | ex -> //printfn "Some unknown exception  %A" ex
                     return None
 }  
 
