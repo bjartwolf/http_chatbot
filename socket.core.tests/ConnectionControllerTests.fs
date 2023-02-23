@@ -23,11 +23,11 @@ type FakeTcpListener(delay: int) =
    interface ITcpListener with
        member this.Stop(): unit = 
               ()
-       member this.AcceptTcpClientAsync(ct: CancellationToken): Async<ITcpClient*IPEndPoint> = 
+       member this.AcceptTcpClientAsync(ct: CancellationToken): Async<(ITcpClient*IPEndPoint) option> = 
               async {
                   do! Async.Sleep(delay) 
                   if (ct.IsCancellationRequested) then failwith "fooobar"
-                  return (new FakeClientWrapper(), new IPEndPoint(1,1)) 
+                  return Some (new FakeClientWrapper(), new IPEndPoint(1,1)) 
               }
 
        member this.Start(): unit = () 
