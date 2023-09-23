@@ -18,5 +18,13 @@ Content-Type: text/hml
   Also need to think of how to send, cannot use Enter in multi-line edit
 - Nicer scrollbars, need to fix upstream https://github.com/DieselMeister/Terminal.Gui.Elmish/issues/22
 - Show states of closed connections
+- TSL
 
 remember to use nc localhost 13000 -q 0 to get the fin package sent
+
+# TSL
+Downloaded certbot and ran
+
+```
+certbot certonly --manual --preferred-challenges dns
+```

@@ -6,6 +6,7 @@ module ConnectionController
 open System.Net
 open System.Threading
 open socket.core.TcpWrappers
+open System.Security.Cryptography.X509Certificates
 
 type ConnectionMsg = GetNewConnection of AsyncReplyChannel< (ITcpClient*IPEndPoint) option > 
                    | CloseConnnection of IPEndPoint // Not sure I will need this yet| GetAllConnections of IPEndPoint list 

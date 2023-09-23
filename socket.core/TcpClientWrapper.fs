@@ -1,5 +1,8 @@
 ﻿namespace socket.core
 
+open System.Security.Cryptography.X509Certificates
+open System.Net.Security
+
 module TcpWrappers =
     open System
     open System.Threading
@@ -11,14 +14,20 @@ module TcpWrappers =
        abstract member Close: unit -> unit 
        inherit IDisposable
 
-    type TcpClientWrapper (innerClient: TcpClient) = 
+    type TcpClientWrapper (innerClient: TcpClient, serverCertificate: X509Certificate2) = 
        let mutable _innerClient = innerClient
 
        interface ITcpClient with
            member this.Close(): unit = 
                _innerClient.Close() 
            member this.GetStream(): IO.Stream = 
-               _innerClient.GetStream() 
+               let tcpStream = _innerClient.GetStream() 
+               let sslStream = new SslStream(tcpStream, true)
+               sslStream.ReadTimeout <- 1000000;
+               sslStream.WriteTimeout <- 1000000;
+               sslStream.AuthenticateAsServer(serverCertificate, clientCertificateRequired = false, checkCertificateRevocation = false) 
+               sslStream
+
        interface IDisposable with
            member this.Dispose() =
                 _innerClient.Dispose()
@@ -28,7 +37,7 @@ module TcpWrappers =
        abstract member Stop: unit -> unit
        abstract member AcceptTcpClientAsync: CancellationToken -> Async<(ITcpClient*IPEndPoint) option> 
 
-    type TcpListenerWrapper (tcpListener: TcpListener) =
+    type TcpListenerWrapper (tcpListener: TcpListener, serverCertificate: X509Certificate2) =
        let mutable _innerTcpLisneter = tcpListener
        interface ITcpListener with
            member this.Stop(): unit = 
@@ -37,7 +46,7 @@ module TcpWrappers =
                   async {
                     try 
                         let! tcpClient = _innerTcpLisneter.AcceptTcpClientAsync(ct).AsTask() |> Async.AwaitTask 
-                        return Some (new TcpClientWrapper(tcpClient), tcpClient.Client.RemoteEndPoint :?> IPEndPoint)
+                        return Some (new TcpClientWrapper(tcpClient, serverCertificate), tcpClient.Client.RemoteEndPoint :?> IPEndPoint)
                     with    
                         _ -> return None 
                   }
