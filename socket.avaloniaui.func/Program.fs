@@ -9,19 +9,43 @@ open Avalonia.FuncUI.Hosts
 open Avalonia.FuncUI
 open Avalonia.FuncUI.Elmish
 open Avalonia.Controls.ApplicationLifetimes
+open Messages
+open Model
+open Avalonia.Threading
+open System
+
+
 
 type MainWindow() as this =
     inherit HostWindow()
     do
-        base.Title <- "Counter Example"
+        base.Title <- "Artisanal WebServer For Uniquely Handcrafted HTTP"
         //base.Icon <- WindowIcon(System.IO.Path.Combine("Assets","Icons", "icon.ico"))
-        base.Height <- 400.0
-        base.Width <- 400.0
+        base.Height <- 1000.0
+        base.Width <- 1000.0
 
+        let subscriptions (_state: Model) : Sub<Msg> =
+            let timerSub (dispatch: Msg -> unit) =
+                let invoke() =
+                    Msg.Tick |> dispatch
+                    true
+
+                DispatcherTimer.Run(Func<bool>(invoke), TimeSpan.FromMilliseconds 1000.0)
+
+            let onClosedSub (dispatch: Msg -> unit) =
+                this.Closed.Subscribe(fun e ->
+                    printfn "The window has been closed."
+                )
+
+            [
+                [ nameof timerSub ], timerSub
+                [ nameof onClosedSub ], onClosedSub
+            ]
         //this.VisualRoot.VisualRoot.Renderer.DrawFps <- true
         //this.VisualRoot.VisualRoot.Renderer.DrawDirtyRects <- true
-        Elmish.Program.mkSimple Counter.init Counter.update Counter.view
+        Elmish.Program.mkProgram Counter.init Counter.update Counter.view
         |> Program.withHost this
+        |> Program.withSubscription subscriptions
         |> Program.withConsoleTrace
         |> Program.run
 

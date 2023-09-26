@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Counter.fs" />
+    <Compile Include="Server.fs" />
+    <Compile Include="Commands.fs" />
+    <Compile Include="WebServer.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
@@ -14,6 +16,10 @@
     <PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
     <PackageReference Include="Avalonia.FuncUI.Elmish" Version="1.0.1" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\socket\socket.fsproj" />
   </ItemGroup>
 
   <ItemGroup>
