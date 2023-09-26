@@ -13,11 +13,10 @@ let private localAddr = IPAddress.Parse("127.0.0.1");
 //let private localAddr = IPAddress.Parse("192.168.10.144");
 let private ep = new IPEndPoint(localAddr, port);
 
-
 let serverCertificate = X509Certificate2.CreateFromPemFile("../../../../certs/fullchain.pem", "../../../../certs/privkey.pem");
 
 let reformattedServerCertificate = new X509Certificate2(serverCertificate.Export(X509ContentType.Pkcs12)) 
 
 let private tcpListener : ITcpListener = new TcpListenerWrapper(new TcpListener(ep), reformattedServerCertificate) 
 
-let server = ListenConnections(tcpListener, cts.Token)
+let listeningServer= ListenConnections(tcpListener, cts.Token)

@@ -5,8 +5,6 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket", "socket\socket.fsproj", "{264959B4-7E2C-43C9-92B2-3F22AD47C00A}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket.core", "socket.core\socket.core.fsproj", "{663BFA80-CDBF-488C-B6F4-AAC97CAE4EC6}"
-EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket.core.tests", "socket.core.tests\socket.core.tests.fsproj", "{F77D3A8A-6F15-41CD-9F31-37D49D01250F}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket.terminal", "socket.terminal.elmish\socket.terminal.fsproj", "{FEFD7956-D796-4CB2-96EA-BC3125CC19BF}"
@@ -21,10 +19,6 @@ Global
 		{264959B4-7E2C-43C9-92B2-3F22AD47C00A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{264959B4-7E2C-43C9-92B2-3F22AD47C00A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{264959B4-7E2C-43C9-92B2-3F22AD47C00A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{663BFA80-CDBF-488C-B6F4-AAC97CAE4EC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{663BFA80-CDBF-488C-B6F4-AAC97CAE4EC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{663BFA80-CDBF-488C-B6F4-AAC97CAE4EC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{663BFA80-CDBF-488C-B6F4-AAC97CAE4EC6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F77D3A8A-6F15-41CD-9F31-37D49D01250F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F77D3A8A-6F15-41CD-9F31-37D49D01250F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F77D3A8A-6F15-41CD-9F31-37D49D01250F}.Release|Any CPU.ActiveCfg = Release|Any CPU

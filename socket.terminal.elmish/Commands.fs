@@ -5,8 +5,9 @@ module Commands =
     open TcpMailbox
     open Terminal.Gui.Elmish
     open Messages
+    open Server
 
-    let server = Server.server 
+    let server = listeningServer
     
     let listenForConnection =
         fun dispatch ->

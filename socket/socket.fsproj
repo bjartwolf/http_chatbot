@@ -6,17 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="TcpClientWrapper.fs" />
     <Compile Include="TcpMailbox.fs" />
     <Compile Include="ConnectionController.fs" />
+    <Compile Include="Messages.fs" />
+    <Compile Include="Model.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FSharp.Control.AsyncSeq" Version="3.2.1" />
     <PackageReference Include="System.IO.Pipelines" Version="6.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\socket.core\socket.core.fsproj" />
   </ItemGroup>
 
 </Project>
