@@ -9,6 +9,8 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket.core.tests", "socket
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket.terminal", "socket.terminal.elmish\socket.terminal.fsproj", "{FEFD7956-D796-4CB2-96EA-BC3125CC19BF}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "socket.avaloniaui.funcui.elmish", "socket.avaloniaui.func\socket.avaloniaui.funcui.elmish.fsproj", "{C07FFDEC-565E-42C1-9DD2-240FD26576F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{FEFD7956-D796-4CB2-96EA-BC3125CC19BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEFD7956-D796-4CB2-96EA-BC3125CC19BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEFD7956-D796-4CB2-96EA-BC3125CC19BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C07FFDEC-565E-42C1-9DD2-240FD26576F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C07FFDEC-565E-42C1-9DD2-240FD26576F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C07FFDEC-565E-42C1-9DD2-240FD26576F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C07FFDEC-565E-42C1-9DD2-240FD26576F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
