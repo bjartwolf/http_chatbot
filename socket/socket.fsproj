@@ -11,6 +11,7 @@
     <Compile Include="ConnectionController.fs" />
     <Compile Include="Messages.fs" />
     <Compile Include="Model.fs" />
+    <Compile Include="Server.fs" />
   </ItemGroup>
 
   <ItemGroup>

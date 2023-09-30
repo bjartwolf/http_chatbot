@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Server.fs" />
     <Compile Include="Commands.fs" />
-    <Compile Include="WebServer.fs" />
+    <Compile Include="Views.fs" />
+    <Compile Include="Update.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\socket.core.tests\socket.core.tests.fsproj" />
     <ProjectReference Include="..\socket\socket.fsproj" />
   </ItemGroup>
 

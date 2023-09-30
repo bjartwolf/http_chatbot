@@ -1,8 +1,6 @@
-﻿
-namespace Examples.CounterApp
+﻿namespace Socket.AvaloniaUi 
 
 open Avalonia
-open Avalonia.Controls
 open Avalonia.Themes.Fluent
 open Elmish
 open Avalonia.FuncUI.Hosts
@@ -13,8 +11,6 @@ open Messages
 open Model
 open Avalonia.Threading
 open System
-
-
 
 type MainWindow() as this =
     inherit HostWindow()
@@ -43,7 +39,7 @@ type MainWindow() as this =
             ]
         //this.VisualRoot.VisualRoot.Renderer.DrawFps <- true
         //this.VisualRoot.VisualRoot.Renderer.DrawDirtyRects <- true
-        Elmish.Program.mkProgram Counter.init Counter.update Counter.view
+        Elmish.Program.mkProgram Update.init Update.update SocketViews.mainView
         |> Program.withHost this
         |> Program.withSubscription subscriptions
         |> Program.withConsoleTrace

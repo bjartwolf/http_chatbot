@@ -9,7 +9,11 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket.core.tests", "socket
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket.terminal", "socket.terminal.elmish\socket.terminal.fsproj", "{FEFD7956-D796-4CB2-96EA-BC3125CC19BF}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "socket.avaloniaui.funcui.elmish", "socket.avaloniaui.func\socket.avaloniaui.funcui.elmish.fsproj", "{C07FFDEC-565E-42C1-9DD2-240FD26576F1}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "socket.avaloniaui.funcui.elmish", "socket.avaloniaui.func\socket.avaloniaui.funcui.elmish.fsproj", "{C07FFDEC-565E-42C1-9DD2-240FD26576F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{E641D612-2D99-4789-BA09-730FB5ED35D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UIs", "UIs", "{79E2D445-4575-4737-98A1-72B1D38C4D9D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +40,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{264959B4-7E2C-43C9-92B2-3F22AD47C00A} = {E641D612-2D99-4789-BA09-730FB5ED35D8}
+		{F77D3A8A-6F15-41CD-9F31-37D49D01250F} = {E641D612-2D99-4789-BA09-730FB5ED35D8}
+		{FEFD7956-D796-4CB2-96EA-BC3125CC19BF} = {79E2D445-4575-4737-98A1-72B1D38C4D9D}
+		{C07FFDEC-565E-42C1-9DD2-240FD26576F1} = {79E2D445-4575-4737-98A1-72B1D38C4D9D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {37F2EE69-3897-4088-BE5B-5C63ABB2B3F5}

@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Server.fs" />
     <Compile Include="Commands.fs" />
     <Compile Include="Views.fs" />
     <Compile Include="Program.fs" />

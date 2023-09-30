@@ -10,7 +10,7 @@ module Commands =
     open Messages
     open Server
 
-    let server = listeningServer
+    let server = listeningServer()
     
     let listenForConnection =
         fun dispatch ->
@@ -20,8 +20,7 @@ module Commands =
                         | Some (client, endpoint) -> 
                                        let invoke() = ConnectionEstablished (ListenMessages client, endpoint) |> dispatch
                                        Dispatcher.UIThread.Invoke(Action(invoke))
-                        | None -> let invoke() = RefreshSentReceived |> dispatch 
-                                  Dispatcher.UIThread.Invoke(Action(invoke))
+                        | None -> Dispatcher.UIThread.Invoke(fun () -> dispatch RefreshSentReceived)
                      }
                 |> Async.Start 
         |> Cmd.ofEffect
@@ -31,8 +30,7 @@ module Commands =
                 async {
                     let! (sentdata,statusClient)= client.PostAndAsyncReply(fun channel -> (GetRecieved channel))
                     let! (recievedData,statusServer)= client.PostAndAsyncReply(fun channel -> (GetSent channel))
-                    let invoke() = ConnectionDataReceived (sentdata, recievedData, statusClient, statusServer)|> dispatch
-                    Dispatcher.UIThread.Invoke(Action(invoke))
+                    Dispatcher.UIThread.Invoke(fun () -> dispatch (ConnectionDataReceived (sentdata, recievedData, statusClient, statusServer))) 
                 }
                 |> Async.Start
         |> Cmd.ofEffect

@@ -7,7 +7,7 @@ module Commands =
     open Messages
     open Server
 
-    let server = listeningServer
+    let server = listeningServer()
     
     let listenForConnection =
         fun dispatch ->

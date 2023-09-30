@@ -6,10 +6,12 @@ module ConnectionController
 open System.Net
 open System.Threading
 open socket.core.TcpWrappers
-open System.Security.Cryptography.X509Certificates
 
 type ConnectionMsg = GetNewConnection of AsyncReplyChannel< (ITcpClient*IPEndPoint) option > 
                    | CloseConnnection of IPEndPoint // Not sure I will need this yet| GetAllConnections of IPEndPoint list 
+
+// TODO: It would be good to somehow rethink this part
+// I am not sure how to do this properly 
 
 let ListenConnections (server: ITcpListener, ct: CancellationToken) = MailboxProcessor<ConnectionMsg>.Start( fun inbox ->
     server.Start();
