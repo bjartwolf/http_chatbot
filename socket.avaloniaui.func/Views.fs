@@ -11,26 +11,29 @@ module SocketViews =
                 ControlsView.view model dispatch
                 ConnectionView.view model.Connections dispatch
 
-                ScrollViewer.create [
-                    ScrollViewer.content (
-                        TextBlock.create [
-                            TextBlock.background "White"
-                            TextBlock.foreground "Black"
-                            TextBlock.width 400.0
-                            TextBlock.dock Dock.Right
-                            TextBlock.text model.SelectedConnectionSent
+                Grid.create [
+                    Grid.rowDefinitions "50*,50*" 
+                    Grid.children[
+                        ScrollViewer.create [
+                            Grid.row 0
+                            ScrollViewer.content (
+                                 TextBlock.create [
+                                    TextBlock.background "Gray"
+                                    TextBlock.text model.SelectedConnectionRecieved
+                                ]
+                            )
                         ]
-                    )
-                ]
-                ScrollViewer.create [
-                    ScrollViewer.content (
-                         TextBlock.create [
-                            TextBlock.background "Gray"
-                            TextBlock.width 400.0
-                            TextBlock.dock Dock.Right
-                            TextBlock.text model.SelectedConnectionRecieved
+
+                        ScrollViewer.create [
+                            Grid.row 1
+                            ScrollViewer.content (
+                                TextBlock.create [
+                                    TextBlock.background "Blue"
+                                    TextBlock.text model.SelectedConnectionSent
+                                ]
+                            )
                         ]
-                    )
+                    ]
                 ]
              ]
         ]
