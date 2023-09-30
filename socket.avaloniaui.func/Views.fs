@@ -43,18 +43,26 @@ module SocketViews =
                 ]                
                 connectionView model.Connections dispatch
 
-                TextBlock.create [
-                    TextBlock.background "White"
-                    TextBlock.foreground "Black"
-                    TextBlock.width 400.0
-                    TextBlock.dock Dock.Right
-                    TextBlock.text model.SelectedConnectionSent
+                ScrollViewer.create [
+                    ScrollViewer.content (
+                        TextBlock.create [
+                            TextBlock.background "White"
+                            TextBlock.foreground "Black"
+                            TextBlock.width 400.0
+                            TextBlock.dock Dock.Right
+                            TextBlock.text model.SelectedConnectionSent
+                        ]
+                    )
                 ]
-                TextBlock.create [
-                    TextBlock.background "Gray"
-                    TextBlock.width 400.0
-                    TextBlock.dock Dock.Right
-                    TextBlock.text model.SelectedConnectionRecieved
+                ScrollViewer.create [
+                    ScrollViewer.content (
+                         TextBlock.create [
+                            TextBlock.background "Gray"
+                            TextBlock.width 400.0
+                            TextBlock.dock Dock.Right
+                            TextBlock.text model.SelectedConnectionRecieved
+                        ]
+                    )
                 ]
              ]
         ]
