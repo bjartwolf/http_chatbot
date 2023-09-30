@@ -1,5 +1,9 @@
 ﻿module Model
-open Messages
+
+open System.Net
+open TcpMailbox
+
+type Connection = MailboxProcessor<lineFeed>*IPEndPoint
 
 type Model = {
     Connections: Connection list 
@@ -8,6 +12,3 @@ type Model = {
     SelectedConnectionRecieved: string
     TextToSend: string
 }
-
-
-

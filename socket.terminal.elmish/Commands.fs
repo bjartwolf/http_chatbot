@@ -6,6 +6,7 @@ module Commands =
     open Terminal.Gui.Elmish
     open Messages
     open Server
+    open Model
 
     let server = listeningServer()
     

@@ -1,9 +1,8 @@
 ﻿module Messages
 
 open TcpMailbox
-open System.Net
+open Model
 
-type Connection = MailboxProcessor<lineFeed>*IPEndPoint
 type Msg =
     | ConnectionEstablished of Connection 
     | ConnectionSelected of Connection 
@@ -14,6 +13,3 @@ type Msg =
     | ClosedCurrent 
     | RefreshSentReceived 
     | ChangeTextToSend of string 
-
-
-

@@ -30,6 +30,7 @@ let readBufferAsync (bytes: byte[]) (networkStream: Stream): Async<int option> =
 // TODO Consider closing both ways to close connection, but we are a server
 type ConnectionStatus = Open | Closed
 type lineFeed = MesssageToSend of string | GetRecieved of AsyncReplyChannel<string*ConnectionStatus> | GetSent of AsyncReplyChannel<string*ConnectionStatus>  | Close 
+
 let ListenMessages (client : ITcpClient) = MailboxProcessor<lineFeed>.Start( fun inbox ->
     let networkStream = client.GetStream()
     let bytes: byte [] = Array.zeroCreate 4096 

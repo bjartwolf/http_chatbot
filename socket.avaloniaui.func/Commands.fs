@@ -2,24 +2,22 @@
 
 open Elmish
 open Avalonia.Threading
-open System
 
 module Commands =
     open ConnectionController
     open TcpMailbox
     open Messages
     open Server
+    open Model 
 
     let server = listeningServer()
-    
+
     let listenForConnection =
         fun dispatch ->
                 async {
                     let! reply = server.PostAndAsyncReply(fun channel -> (GetNewConnection channel))
                     match reply with 
-                        | Some (client, endpoint) -> 
-                                       let invoke() = ConnectionEstablished (ListenMessages client, endpoint) |> dispatch
-                                       Dispatcher.UIThread.Invoke(Action(invoke))
+                        | Some (client, endpoint) -> Dispatcher.UIThread.Invoke(fun () -> ConnectionEstablished (ListenMessages client, endpoint) |> dispatch)
                         | None -> Dispatcher.UIThread.Invoke(fun () -> dispatch RefreshSentReceived)
                      }
                 |> Async.Start 
