@@ -30,6 +30,10 @@ module SocketViews =
                     TextBox.horizontalAlignment HorizontalAlignment.Stretch
                     TextBox.text model.TextToSend
                     TextBox.onTextChanged (fun x -> dispatch(ChangeTextToSend x))
+                    TextBox.onKeyDown( fun x -> 
+                        if x.Key = Avalonia.Input.Key.Enter then 
+                            x.Handled <- true
+                            dispatch SendText)
                 ]
                 TextBlock.create [
                     TextBlock.background "White"
