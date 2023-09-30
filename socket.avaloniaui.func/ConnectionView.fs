@@ -22,4 +22,5 @@ let connectionView (connections: Connection list) (dispatch: Msg -> unit) : IVie
                    if x <> null then   
                        let conn = x :?> Connection
                        dispatch (ConnectionSelected conn))
-            ]
+                ListBox.selectionMode SelectionMode.AlwaysSelected
+            ] 
