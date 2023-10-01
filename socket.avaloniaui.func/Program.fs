@@ -11,13 +11,14 @@ open Messages
 open Model
 open Avalonia.Threading
 open System
+open Avalonia.Controls
 
 type MainWindow() as this =
     inherit HostWindow()
     do
         base.Title <- "Artisanal WebServer For Uniquely Handcrafted HTTP"
-        //base.Icon <- WindowIcon(System.IO.Path.Combine("Assets","Icons", "icon.ico"))
-        base.Height <- 1000.0
+        base.Icon <- WindowIcon(System.IO.Path.Combine("Assets","Icons", "icon.ico"))
+        base.Height <- 500.0
         base.Width <- 1000.0
 
         let subscriptions (_state: Model) : Sub<Msg> =
@@ -50,7 +51,8 @@ type App() =
 
     override this.Initialize() =
         this.Styles.Add (FluentTheme())
-        this.RequestedThemeVariant <- Styling.ThemeVariant.Dark
+        this.RequestedThemeVariant <- Styling.ThemeVariant.Default
+        //this.RequestedThemeVariant <- Styling.ThemeVariant.Dark
 
     override this.OnFrameworkInitializationCompleted() =
         match this.ApplicationLifetime with
