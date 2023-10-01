@@ -5,12 +5,14 @@ open Model
 open Avalonia.FuncUI
 open Avalonia.Controls
 open Messages
+open Avalonia.Media
 
 let view (connections: Connection list) (dispatch: Msg -> unit) =
     StackPanel.create [
         StackPanel.children [
             TextBlock.create [
-                TextBlock.text "Connected sockets" 
+                TextBlock.fontWeight FontWeight.DemiBold
+                TextBlock.text "Connected sockets: " 
             ]
 
             ListBox.create [

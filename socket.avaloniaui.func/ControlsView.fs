@@ -12,7 +12,6 @@ let view (model:Model) (dispatch: Msg -> unit) =
         StackPanel.dock Dock.Bottom
         StackPanel.children [
             TextBox.create [
-                TextBox.background "Gray"
                 TextBox.horizontalAlignment HorizontalAlignment.Stretch
                 TextBox.text model.TextToSend
                 TextBox.onTextChanged (fun x -> dispatch(ChangeTextToSend x))
