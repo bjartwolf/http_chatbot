@@ -27,7 +27,7 @@ type MainWindow() as this =
                     Msg.Tick |> dispatch
                     true
 
-                DispatcherTimer.Run(Func<bool>(invoke), TimeSpan.FromMilliseconds 1000.0)
+                DispatcherTimer.Run(Func<bool>(invoke), TimeSpan.FromMilliseconds 100.0)
 
             let onClosedSub (dispatch: Msg -> unit) =
                 this.Closed.Subscribe(fun e ->
@@ -43,7 +43,7 @@ type MainWindow() as this =
         Elmish.Program.mkProgram Update.init Update.update SocketViews.mainView
         |> Program.withHost this
         |> Program.withSubscription subscriptions
-        |> Program.withConsoleTrace
+//        |> Program.withConsoleTrace
         |> Program.run
 
 type App() =
