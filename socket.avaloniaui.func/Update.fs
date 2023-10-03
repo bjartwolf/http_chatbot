@@ -28,9 +28,9 @@ module Update =
                 match model.SelectedItem with
                   | Some activeConnection ->  model, 
                                               Commands.getSentAndRecieved activeConnection
-                  | None  when not model.Connections.IsEmpty -> { model with SelectedItem = Some model.Connections.Head; SelectedConnectionRecieved = ""; SelectedConnectionSent = ""},
+                  | None  when not model.Connections.IsEmpty -> { model with SelectedItem = Some model.Connections.Head },
                                                                 Commands.getSentAndRecieved model.Connections.Head
-                  | None -> { model with SelectedConnectionRecieved = ""; SelectedConnectionSent = ""}, Cmd.none
+                  | None -> model, Cmd.none
             | ConnectionDataReceived (recievedData,sentData,_,_) -> 
                     { model with SelectedConnectionRecieved = recievedData; SelectedConnectionSent = sentData},
                     Cmd.none
@@ -44,10 +44,10 @@ module Update =
                                         Commands.sendData c model.TextToSend
             | ClosedCurrent -> let index = List.tryFindIndex(fun c -> c = model.SelectedItem.Value) model.Connections  
                                match index with
-                                | Some i -> {model with Connections = List.removeAt i model.Connections; SelectedConnectionRecieved = ""; SelectedConnectionSent = ""; SelectedItem = None}, Cmd.none
-                                | None -> { model with SelectedConnectionRecieved = ""; SelectedConnectionSent = ""}, Cmd.none
+                                | Some i -> {model with Connections = List.removeAt i model.Connections}, Cmd.none
+                                | None -> model, Cmd.none 
             | CloseCurrent -> match model.SelectedItem with
-                                    | None -> { model with SelectedConnectionRecieved = ""; SelectedConnectionSent = ""}, Cmd.none
+                                    | None -> model, Cmd.none
                                     | Some c -> model, Commands.closeCurrent c
             | Tick -> model, Commands.listenForConnection
     

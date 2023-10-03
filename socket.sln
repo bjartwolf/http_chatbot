@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{E641D612-2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UIs", "UIs", "{79E2D445-4575-4737-98A1-72B1D38C4D9D}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "socket.avaloniaui.funcui.elmish.tests", "socket.avaloniaui.funcui.elmish.tests\socket.avaloniaui.funcui.elmish.tests.fsproj", "{E88F6752-1BB1-41F8-A7E1-AF8FAD4A506F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{C07FFDEC-565E-42C1-9DD2-240FD26576F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C07FFDEC-565E-42C1-9DD2-240FD26576F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C07FFDEC-565E-42C1-9DD2-240FD26576F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E88F6752-1BB1-41F8-A7E1-AF8FAD4A506F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E88F6752-1BB1-41F8-A7E1-AF8FAD4A506F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E88F6752-1BB1-41F8-A7E1-AF8FAD4A506F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E88F6752-1BB1-41F8-A7E1-AF8FAD4A506F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{F77D3A8A-6F15-41CD-9F31-37D49D01250F} = {E641D612-2D99-4789-BA09-730FB5ED35D8}
 		{FEFD7956-D796-4CB2-96EA-BC3125CC19BF} = {79E2D445-4575-4737-98A1-72B1D38C4D9D}
 		{C07FFDEC-565E-42C1-9DD2-240FD26576F1} = {79E2D445-4575-4737-98A1-72B1D38C4D9D}
+		{E88F6752-1BB1-41F8-A7E1-AF8FAD4A506F} = {79E2D445-4575-4737-98A1-72B1D38C4D9D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {37F2EE69-3897-4088-BE5B-5C63ABB2B3F5}
