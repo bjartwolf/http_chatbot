@@ -17,7 +17,8 @@ type MainWindow() as this =
     inherit HostWindow()
     do
         base.Title <- "Artisanal WebServer For Uniquely Handcrafted HTTP"
-        base.Icon <- WindowIcon(System.IO.Path.Combine("Assets","Icons", "icon.ico"))
+//        base.Icon <- WindowIcon(System.IO.Path.Combine("Assets","Icons", "icon.ico"))
+        base.Icon <- WindowIcon(System.IO.Path.Combine("Assets","Icons", "HTTP.ico"))
         base.Height <- 500.0
         base.Width <- 1000.0
 
