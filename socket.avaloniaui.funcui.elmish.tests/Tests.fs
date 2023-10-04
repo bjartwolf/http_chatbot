@@ -5,6 +5,7 @@ open Xunit
 open Socket.AvaloniaUi
 open Messages
 open Model
+open Elmish
 
 [<Fact>]
 let ``My test`` () =
@@ -35,4 +36,5 @@ let ``My test 1`` () =
     let (model', msg')= Update.update msg model
 
     Assert.Equal("HTTP/1.1 200 OK", model'.TextToSend)
+    Assert.Equal<Cmd<Msg>>(Cmd.none, msg')
 
