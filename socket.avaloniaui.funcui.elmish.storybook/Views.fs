@@ -9,6 +9,8 @@ module DesignSystem =
     let mainView (model: Model) (dispatch) =
         DockPanel.create [
             DockPanel.children [
+                ControlsView.view model dispatch
+                ConnectionView.view model.Connections dispatch
                 RequestReplyView.view model.SelectedConnectionRecieved model.SelectedConnectionSent 
              ]
         ]
