@@ -23,7 +23,10 @@ module TcpWrappers =
            member this.GetStream(): IO.Stream = 
                let tcpStream = _innerClient.GetStream() 
                match serverCertificate with 
-                    | None -> tcpStream
+                    | None -> 
+                            tcpStream.ReadTimeout <- 10000000
+                            tcpStream.WriteTimeout <- 10000000
+                            tcpStream
                     | Some certificate -> 
                                let sslStream = new SslStream(tcpStream, true)
                                sslStream.ReadTimeout <- 1000000;
