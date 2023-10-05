@@ -14,7 +14,7 @@ module TcpWrappers =
        abstract member Close: unit -> unit 
        inherit IDisposable
 
-    type TcpClientWrapper (innerClient: TcpClient, serverCertificate: X509Certificate2) = 
+    type TcpClientWrapper (innerClient: TcpClient, serverCertificate: X509Certificate2 option) = 
        let mutable _innerClient = innerClient
 
        interface ITcpClient with
@@ -22,11 +22,14 @@ module TcpWrappers =
                _innerClient.Close() 
            member this.GetStream(): IO.Stream = 
                let tcpStream = _innerClient.GetStream() 
-               let sslStream = new SslStream(tcpStream, true)
-               sslStream.ReadTimeout <- 1000000;
-               sslStream.WriteTimeout <- 1000000;
-               sslStream.AuthenticateAsServer(serverCertificate, clientCertificateRequired = false, checkCertificateRevocation = false) 
-               sslStream
+               match serverCertificate with 
+                    | None -> tcpStream
+                    | Some certificate -> 
+                               let sslStream = new SslStream(tcpStream, true)
+                               sslStream.ReadTimeout <- 1000000;
+                               sslStream.WriteTimeout <- 1000000;
+                               sslStream.AuthenticateAsServer(certificate, clientCertificateRequired = false, checkCertificateRevocation = false) 
+                               sslStream
 
        interface IDisposable with
            member this.Dispose() =
@@ -37,7 +40,7 @@ module TcpWrappers =
        abstract member Stop: unit -> unit
        abstract member AcceptTcpClientAsync: CancellationToken -> Async<(ITcpClient*IPEndPoint) option> 
 
-    type TcpListenerWrapper (tcpListener: TcpListener, serverCertificate: X509Certificate2) =
+    type TcpListenerWrapper (tcpListener: TcpListener, serverCertificate: X509Certificate2 option) =
        let mutable _innerTcpLisneter = tcpListener
        interface ITcpListener with
            member this.Stop(): unit = 

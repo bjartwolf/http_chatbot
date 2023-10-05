@@ -6,12 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="App.config" />
     <Compile Include="RequestReplyView.fs" />
     <Compile Include="ControlsView.fs" />
     <Compile Include="Commands.fs" />
     <Compile Include="ConnectionView.fs" />
     <Compile Include="Views.fs" />
     <Compile Include="Update.fs" />
+    <Compile Include="ConfigParser.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
@@ -22,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Argu" Version="6.1.1" />
     <PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
     <PackageReference Include="Avalonia.FuncUI.Elmish" Version="1.0.1" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4" />

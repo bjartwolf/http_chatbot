@@ -7,18 +7,21 @@ open ConnectionController
 open System.Net.Sockets
 open System.Security.Cryptography.X509Certificates
 
-// TODO read parameters from command line on IPs, ports to listen too, 
-// establishing TLS or not, paths to certs and the possibility to run 
-// without TLS.
-let listeningServer () = 
-    let cts = new CancellationTokenSource()
-    let port = 13001;
-    let localAddr = IPAddress.Parse("127.0.0.1");
-    //let private localAddr = IPAddress.Parse("192.168.10.144");
-    let ep = new IPEndPoint(localAddr, port);
+type Config = { port: uint16;
+                ipAddress: IPAddress;
+                certPemFilePath: string;
+                keyPemFilePath: string;
+                insecure: bool }
 
-    let serverCertificate = X509Certificate2.CreateFromPemFile("../../../../certs/fullchain.pem", "../../../../certs/privkey.pem");
-    let reformattedServerCertificate = new X509Certificate2(serverCertificate.Export(X509ContentType.Pkcs12)) 
-    let tcpListener = new TcpListenerWrapper(new TcpListener(ep), reformattedServerCertificate) 
+let listeningServer (config: Config) = 
+    let cts = new CancellationTokenSource()
+    let ep = new IPEndPoint(config.ipAddress, int config.port);
+
+    let serverCertificate: X509Certificate2 option  = if config.insecure then
+                                                           None
+                                                      else let cert = X509Certificate2.CreateFromPemFile(config.certPemFilePath, config.keyPemFilePath)
+                                                           Some (new X509Certificate2(cert.Export(X509ContentType.Pkcs12)))
+
+    let tcpListener = new TcpListenerWrapper(new TcpListener(ep), serverCertificate) 
     
     ListenConnections(tcpListener, cts.Token)

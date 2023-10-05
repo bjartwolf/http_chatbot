@@ -1,5 +1,7 @@
 ﻿namespace socket.terminal 
 
+open System.Net
+
 module Commands =
     open ConnectionController
     open TcpMailbox
@@ -8,7 +10,13 @@ module Commands =
     open Server
     open Model
 
-    let server = listeningServer()
+    let config = { port = uint16 13001;
+                   ipAddress= IPAddress.Parse("127.0.0.1");
+                   certPemFilePath = "C:\code\http_chatbot\Certs\fullchain.pem";
+                   keyPemFilePath = "C:\code\http_chatbot\Certs\privkey.pem";
+                   insecure= false}
+
+    let server = listeningServer(config)
     
     let listenForConnection =
         fun dispatch ->

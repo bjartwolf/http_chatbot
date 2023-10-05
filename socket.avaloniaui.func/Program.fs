@@ -12,13 +12,20 @@ open Model
 open Avalonia.Threading
 open System
 open Avalonia.Controls
+open Argu
+open ConfigParser
+open socket.terminal
+open Server
+open System.Net
 
-type MainWindow() as this =
+
+type MainWindow(config: Config) as this =
     inherit HostWindow()
     do
         base.Title <- "Artisanal WebServer For Uniquely Handcrafted HTTP"
-//        base.Icon <- WindowIcon(System.IO.Path.Combine("Assets","Icons", "icon.ico"))
         base.Icon <- WindowIcon(System.IO.Path.Combine("Assets","Icons", "HTTP.ico"))
+        printfn "Listening to IP %A at port %A" config.ipAddress config.port
+        if (config.insecure) then printfn "Insecure mode, only HTTP"
         base.Height <- 500.0
         base.Width <- 1000.0
 
@@ -41,6 +48,7 @@ type MainWindow() as this =
             ]
         //this.VisualRoot.VisualRoot.Renderer.DrawFps <- true
         //this.VisualRoot.VisualRoot.Renderer.DrawDirtyRects <- true
+        Commands.initServerWithConfig config 
         Elmish.Program.mkProgram Update.init Update.update SocketViews.mainView
         |> Program.withHost this
         |> Program.withSubscription subscriptions
@@ -58,12 +66,23 @@ type App() =
     override this.OnFrameworkInitializationCompleted() =
         match this.ApplicationLifetime with
         | :? IClassicDesktopStyleApplicationLifetime as desktopLifetime ->
-            let mainWindow = MainWindow()
-            desktopLifetime.MainWindow <- mainWindow
+            desktopLifetime.Startup.Add(fun (args: ControlledApplicationLifetimeStartupEventArgs) -> 
+                let errorHandler = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some ConsoleColor.Red)
+                let parser = ArgumentParser.Create<Arguments>(programName = "httpchatbot.exe", errorHandler=errorHandler)
+                let results = parser.Parse args.Args 
+                if (results.Contains Darkmode) then this.RequestedThemeVariant <- Styling.ThemeVariant.Dark
+                let config: Config = { ipAddress = IPAddress.Parse(results.GetResult(Ip, "127.0.0.1"));
+                                       port = results.GetResult Port;
+                                       certPemFilePath = results.GetResult (CertPemFilePath, "");
+                                       keyPemFilePath = results.GetResult (KeyPemFilePath, "");
+                                       insecure = results.Contains Insecure }
+                
+                let mainWindow = MainWindow(config)
+                desktopLifetime.MainWindow <- mainWindow
+                ()) 
         | _ -> ()
 
 module Program =
-
     [<EntryPoint>]
     let main(args: string[]) =
         AppBuilder

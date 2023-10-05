@@ -10,7 +10,11 @@ module Commands =
     open Server
     open Model 
 
-    let server = listeningServer()
+    let mutable server: MailboxProcessor<ConnectionMsg> = MailboxProcessor<ConnectionMsg>.Start( fun _ ->  async {()})
+
+    let initServerWithConfig(config: Config) : unit = 
+        server <- listeningServer(config)
+        ()
 
     let listenForConnection =
         fun dispatch ->
