@@ -44,7 +44,7 @@ let ListenMessages (client : ITcpClient) = MailboxProcessor<lineFeed>.Start( fun
                 match streamState with
                     | Open -> 
                             let msgWithNewline = msg + System.Environment.NewLine
-                            let bytesToSend = System.Text.Encoding.ASCII.GetBytes(msgWithNewline)
+                            let bytesToSend = System.Text.Encoding.Latin1.GetBytes(msgWithNewline)
                             // need to handle writing errors...
                             try 
                                 do! networkStream.WriteAsync(bytesToSend, 0, bytesToSend.Length) |> Async.AwaitTask
@@ -78,7 +78,7 @@ let ListenMessages (client : ITcpClient) = MailboxProcessor<lineFeed>.Start( fun
                                  client.Dispose()
                                  return! innerLoop()
                      | Some bytesRead ->
-                            recievedString <- recievedString + System.Text.Encoding.ASCII.GetString(bytes, 0, bytesRead)
+                            recievedString <- recievedString + System.Text.Encoding.Latin1.GetString(bytes, 0, bytesRead)
                             return! innerLoop()
                      | None -> return! innerLoop()
     }
