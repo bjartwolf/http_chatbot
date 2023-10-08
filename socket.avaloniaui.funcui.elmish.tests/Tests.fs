@@ -1,11 +1,11 @@
 module Tests
 
-open System
 open Xunit
 open Socket.AvaloniaUi
 open Messages
 open Model
 open Elmish
+open ConnectionController
 
 [<Fact>]
 let ``My test`` () =
@@ -33,7 +33,8 @@ let ``My test 1`` () =
 
     let msg = ChangeTextToSend  "HTTP/1.1 200 OK"
 
-    let (model', msg')= Update.update msg model
+    let server: MailboxProcessor<ConnectionMsg> = MailboxProcessor<ConnectionMsg>.Start( fun _ ->  async {()})
+    let (model', msg')= (Update.update server) msg model
 
     Assert.Equal("HTTP/1.1 200 OK", model'.TextToSend)
     Assert.Equal<Cmd<Msg>>(Cmd.none, msg')

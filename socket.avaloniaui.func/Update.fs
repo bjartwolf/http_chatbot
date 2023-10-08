@@ -1,12 +1,14 @@
 ﻿namespace Socket.AvaloniaUi 
 
+open ConnectionController
+
 module Update =
     open Messages
     open Model
     open Elmish
     open socket.terminal
 
-    let init () : Model * Cmd<Msg> =
+    let init (server: MailboxProcessor<ConnectionMsg>) (): Model * Cmd<Msg> =
         let model = {
             Connections = [] 
             SelectedItem = None 
@@ -14,9 +16,9 @@ module Update =
             SelectedConnectionRecieved = ""
             TextToSend = ""
         }
-        model, Commands.listenForConnection 
+        model, (Commands.listenForConnection server)
 
-    let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
+    let update (server: MailboxProcessor<ConnectionMsg>) (msg: Msg) (model: Model) : Model * Cmd<Msg> =
         match msg with 
             | ConnectionEstablished conn ->  
                     { model with Connections = (conn :: model.Connections ) }, 
@@ -49,5 +51,5 @@ module Update =
             | CloseCurrent -> match model.SelectedItem with
                                     | None -> model, Cmd.none
                                     | Some c -> model, Commands.closeCurrent c
-            | Tick -> model, Commands.listenForConnection
+            | Tick -> model, Commands.listenForConnection server
     

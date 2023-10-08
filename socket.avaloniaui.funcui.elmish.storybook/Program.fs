@@ -7,6 +7,7 @@ open Avalonia.FuncUI.Hosts
 open Avalonia.FuncUI
 open Avalonia.FuncUI.Elmish
 open Avalonia.Controls.ApplicationLifetimes
+open ConnectionController
 
 type MainWindow() as this =
     inherit HostWindow()
@@ -15,7 +16,9 @@ type MainWindow() as this =
         base.Height <- 1000
         base.Width <- 1000.0
 
-        Elmish.Program.mkProgram FakeUpdate.init Update.update DesignSystem.mainView
+        let server: MailboxProcessor<ConnectionMsg> = MailboxProcessor<ConnectionMsg>.Start( fun _ ->  async {()})
+
+        Elmish.Program.mkProgram FakeUpdate.init (Update.update server) DesignSystem.mainView
         |> Program.withHost this
         |> Program.run
 

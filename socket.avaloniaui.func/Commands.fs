@@ -7,16 +7,9 @@ module Commands =
     open ConnectionController
     open TcpMailbox
     open Messages
-    open Server
     open Model 
 
-    let mutable server: MailboxProcessor<ConnectionMsg> = MailboxProcessor<ConnectionMsg>.Start( fun _ ->  async {()})
-
-    let initServerWithConfig(config: Config) : unit = 
-        server <- listeningServer(config)
-        ()
-
-    let listenForConnection =
+    let listenForConnection (server: MailboxProcessor<ConnectionMsg>)=
         fun dispatch ->
                 async {
                     let! reply = server.PostAndAsyncReply(fun channel -> (GetNewConnection channel))
@@ -49,9 +42,4 @@ module Commands =
                 client.Post(Close)
                 // todo possibly UI thread?
                 dispatch ClosedCurrent
-        |> Cmd.ofEffect
-
-
-
-
-
+        |> Cmd.ofEffect 

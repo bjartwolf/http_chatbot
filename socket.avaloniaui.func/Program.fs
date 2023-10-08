@@ -17,6 +17,7 @@ open ConfigParser
 open socket.terminal
 open Server
 open System.Net
+open ConnectionController
 
 
 type MainWindow(config: Config) as this =
@@ -48,8 +49,9 @@ type MainWindow(config: Config) as this =
             ]
         //this.VisualRoot.VisualRoot.Renderer.DrawFps <- true
         //this.VisualRoot.VisualRoot.Renderer.DrawDirtyRects <- true
-        Commands.initServerWithConfig config 
-        Elmish.Program.mkProgram Update.init Update.update SocketViews.mainView
+
+        let server: MailboxProcessor<ConnectionMsg> = listeningServer config 
+        Elmish.Program.mkProgram (Update.init server) (Update.update server) SocketViews.mainView
         |> Program.withHost this
         |> Program.withSubscription subscriptions
 //        |> Program.withConsoleTrace
@@ -61,7 +63,6 @@ type App() =
     override this.Initialize() =
         this.Styles.Add (FluentTheme())
         this.RequestedThemeVariant <- Styling.ThemeVariant.Default
-        //this.RequestedThemeVariant <- Styling.ThemeVariant.Dark
 
     override this.OnFrameworkInitializationCompleted() =
         match this.ApplicationLifetime with

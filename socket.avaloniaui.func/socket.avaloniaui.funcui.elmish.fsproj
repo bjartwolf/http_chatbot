@@ -6,12 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Subviews\RequestReplyView.fs" />
+    <Compile Include="Subviews\ControlsView.fs" />
+    <Compile Include="Subviews\ConnectionView.fs" />
+    <Compile Include="View.fs" />
     <None Include="App.config" />
-    <Compile Include="RequestReplyView.fs" />
-    <Compile Include="ControlsView.fs" />
     <Compile Include="Commands.fs" />
-    <Compile Include="ConnectionView.fs" />
-    <Compile Include="Views.fs" />
     <Compile Include="Update.fs" />
     <Compile Include="ConfigParser.fs" />
     <Compile Include="Program.fs" />
