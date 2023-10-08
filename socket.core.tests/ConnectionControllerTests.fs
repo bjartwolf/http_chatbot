@@ -10,7 +10,7 @@ open System.IO
 open ConnectionController 
 
 type FakeClientWrapper () = 
-   let mutable ms = new MemoryStream()
+   let ms = new MemoryStream()
    interface ITcpClient with
        member this.Close(): unit = ()
        member this.GetStream(): IO.Stream = 

@@ -15,7 +15,7 @@ module TcpWrappers =
        inherit IDisposable
 
     type TcpClientWrapper (innerClient: TcpClient, serverCertificate: X509Certificate2 option) = 
-       let mutable _innerClient = innerClient
+       let _innerClient = innerClient
 
        interface ITcpClient with
            member this.Close(): unit = 
@@ -44,7 +44,7 @@ module TcpWrappers =
        abstract member AcceptTcpClientAsync: CancellationToken -> Async<(ITcpClient*IPEndPoint) option> 
 
     type TcpListenerWrapper (tcpListener: TcpListener, serverCertificate: X509Certificate2 option) =
-       let mutable _innerTcpLisneter = tcpListener
+       let _innerTcpLisneter = tcpListener
        interface ITcpListener with
            member this.Stop(): unit = 
                _innerTcpLisneter.Stop() 
