@@ -31,4 +31,8 @@
     <ProjectReference Include="..\socket.avaloniaui.func\socket.avaloniaui.funcui.elmish.fsproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="7.0.400" />
+  </ItemGroup>
+
 </Project>

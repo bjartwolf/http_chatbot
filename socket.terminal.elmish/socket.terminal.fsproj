@@ -19,4 +19,8 @@
     <PackageReference Include="Terminal.Gui.Elmish" Version="2.1.172" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="7.0.400" />
+  </ItemGroup>
+
 </Project>
