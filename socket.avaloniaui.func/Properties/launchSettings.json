@@ -1,11 +1,12 @@
 {
   "profiles": {
     "socket.avaloniaui.funcui.elmish": {
-      "commandName": "Project"
+      "commandName": "Project",
     },
     "WSL": {
       "commandName": "WSL2",
+      "commandLineArgs": "socket.avaloniaui.funcui.elmish.dll --certpemfilepath /home/bjartwolf/certs/fullchain.pem --keypemfilepath /home/bjartwolf/certs/privkey.pem",
       "distributionName": ""
     }
-   }
+  }
 }
