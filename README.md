@@ -37,6 +37,9 @@ depends on your distribution.
 
 ## Using cert bot
 If you want to use proper certificates to allow for being a proper webserver, the cheapest way is to use Let's Encrypt. Instructions are given here.
+This does require you to own a domain to properly verify the name. I am using DNS verification so that is what I have documented,
+but you need to be able to verify that you own the domain somehow. Details are given in the Let's Encrypt/certbot documentation.
+
 
 Download [certbot](https://certbot.eff.org/).
 Run PowerShell as admin.
