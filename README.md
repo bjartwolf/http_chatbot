@@ -6,11 +6,11 @@ cd socket.avaloniaui.func
 dotnet run --insecure --port 8080 --ip 127.0.0.1
 ```
 
-Open a browser on ```http://127.0.0.1:8080``` or try ```curl http://localhost:8080``` 
+Open a browser on ```http://127.0.0.1:8080``` or try ```curl http://localhost:8080```
 Try replying with
 ```
 HTTP/1.1 200 OK
-Content-Type: text/hml
+Content-Type: text/html
 
 <html>
 <h1>Hello</h1>
@@ -53,7 +53,7 @@ certbot certonly --manual --preferred-challenges dns
 ```
 
 Fill in desired domain name, and then create a TXT record as described in your DNS and then you have the certificates in the required format.
-Point to the certificate by updating the App.config or 
+Point to the certificate by updating the App.config or
 
 ```
 dotnet run --ip 127.0.0.1 --port 443 --certpemfilepath c:\Certbot\live\artisanal.bjartnes.dev\fullchain.pem --keypemfilepath c:\Certbot\live\artisanal.bjartnes.dev\privkey.pem
