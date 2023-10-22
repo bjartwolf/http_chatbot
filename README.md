@@ -1,3 +1,6 @@
+<img width="973" alt="image" src="https://github.com/bjartwolf/http_chatbot/assets/1174441/9841d791-d39c-4968-be76-6f9e63c5453b">
+
+
 # Running in HTTP mode
 To run without a certificate
 
