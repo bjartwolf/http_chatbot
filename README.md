@@ -28,6 +28,7 @@ It might not work as straight forward on other OSes.
 
 ```powershell
 cd socket.avaloniaui.func
+dotnet dev-certs https --clean
 dotnet dev-certs https --export-path devcert.pem --no-password --format PEM --trust
 dotnet run --ip 127.0.0.1 --port 14011 --certpemfilepath (Get-Item 'devcert.pem').FullName --keypemfilepath (Get-Item 'devcert.key').FullName
 

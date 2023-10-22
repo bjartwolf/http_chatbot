@@ -18,6 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Include="Assets\Fonts\Go-Mono.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AvaloniaResource>
     <Content Include="Assets\Icons\HTTP.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

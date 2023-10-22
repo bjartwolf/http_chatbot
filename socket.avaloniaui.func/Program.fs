@@ -25,6 +25,9 @@ type MainWindow(config: Config) as this =
     do
         base.Title <- "Artisanal WebServer For Uniquely Handcrafted HTTP"
         base.Icon <- WindowIcon(System.IO.Path.Combine("Assets","Icons", "HTTP.ico"))
+        // Option to override font with command line 
+        //base.FontFamily <- Avalonia.Media.FontFamily("Fira Code") 
+        base.FontFamily <- Avalonia.Media.FontFamily("avares://socket.avaloniaui.funcui.elmish/Assets/Fonts/Go-Mono.ttf#Go Mono") 
         printfn "Listening to IP %A at port %A" config.ipAddress config.port
         if (config.insecure) then printfn "Insecure mode, only HTTP"
         base.Height <- 500.0
