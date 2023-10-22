@@ -26,11 +26,15 @@ Content-Type: text/hml
 Using dotnet dev-certs is a simple and quick way on Windows to get started with a certificate that can be used with localhost and that is trusted.
 It might not work as straight forward on other OSes.
 
-```
+```powershell
+cd socket.avaloniaui.func
 dotnet dev-certs https --export-path devcert.pem --no-password --format PEM --trust
+dotnet run --ip 127.0.0.1 --port 14011 --certpemfilepath (Get-Item 'devcert.pem').FullName --keypemfilepath (Get-Item 'devcert.key').FullName
+
 ```
+
 This will produce a ```devcert.pem``` and a ```devcert.key``` file that you can rever to (with full pathname) from the App.config or using command line parameters.
-Listening to 127.0.0.1 should then allow you to connect securely on https://localhost:PORT
+Listening to 127.0.0.1 should then allow you to connect securely on https://localhost:14011
 
 On linux it might be easier to just create the certificate yourself with OpenSSL than battle with the devcerts, I am honestly not sure what is the least amount of hassle and it likely
 depends on your distribution. 
