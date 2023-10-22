@@ -21,6 +21,23 @@ Content-Type: text/hml
 
 # HTTPS/TLS
 
+## Using dotnet dev cert
+
+Using dotnet dev-certs is a simple and quick way on Windows to get started with a certificate that can be used with localhost and that is trusted.
+It might not work as straight forward on other OSes.
+
+```
+dotnet dev-certs https --export-path devcert.pem --no-password --format PEM --trust
+```
+This will produce a ```devcert.pem``` and a ```devcert.key``` file that you can rever to (with full pathname) from the App.config or using command line parameters.
+Listening to 127.0.0.1 should then allow you to connect securely on https://localhost:PORT
+
+On linux it might be easier to just create the certificate yourself with OpenSSL than battle with the devcerts, I am honestly not sure what is the least amount of hassle and it likely
+depends on your distribution. 
+
+## Using cert bot
+If you want to use proper certificates to allow for being a proper webserver, the cheapest way is to use Let's Encrypt. Instructions are given here.
+
 Download [certbot](https://certbot.eff.org/).
 Run PowerShell as admin.
 
