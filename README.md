@@ -6,6 +6,8 @@
 
 [![Demo](https://img.youtube.com/vi/mhxm-Wrh8YY/0.jpg)](https://www.youtube.com/watch?v=mhxm-Wrh8YY "Demo")
 
+If you want more basics on the TCP/IP and HTTP part I have a workshop at https://github.com/bjartnes/http-workshop
+
 # Running in HTTP mode
 To run without a certificate
 
