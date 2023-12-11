@@ -351,3 +351,5 @@ MigrationBackup/
 
 # Certificates
 certs/
+*.key
+*.pem
