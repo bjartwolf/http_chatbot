@@ -1,3 +1,13 @@
+# Screenshot of chatbot
+<img width="973" alt="image" src="https://github.com/bjartwolf/http_chatbot/assets/1174441/9841d791-d39c-4968-be76-6f9e63c5453b">
+
+
+# Demonstration recorded talk
+
+[![Demo](https://img.youtube.com/vi/mhxm-Wrh8YY/0.jpg)](https://www.youtube.com/watch?v=mhxm-Wrh8YY "Demo")
+
+If you want more basics on the TCP/IP and HTTP part I have a workshop at https://github.com/bjartnes/http-workshop
+
 # Running in HTTP mode
 To run without a certificate
 
@@ -6,11 +16,11 @@ cd socket.avaloniaui.func
 dotnet run --insecure --port 8080 --ip 127.0.0.1
 ```
 
-Open a browser on ```http://127.0.0.1:8080``` or try ```curl http://localhost:8080``` 
+Open a browser on ```http://127.0.0.1:8080``` or try ```curl http://localhost:8080```
 Try replying with
 ```
 HTTP/1.1 200 OK
-Content-Type: text/hml
+Content-Type: text/html
 
 <html>
 <h1>Hello</h1>
@@ -21,6 +31,31 @@ Content-Type: text/hml
 
 # HTTPS/TLS
 
+## Using dotnet dev cert
+
+Using dotnet dev-certs is a simple and quick way on Windows to get started with a certificate that can be used with localhost and that is trusted.
+It might not work as straight forward on other OSes.
+
+```powershell
+cd socket.avaloniaui.func
+dotnet dev-certs https --clean
+dotnet dev-certs https --export-path devcert.pem --no-password --format PEM --trust
+dotnet run --ip 127.0.0.1 --port 14011 --certpemfilepath (Get-Item 'devcert.pem').FullName --keypemfilepath (Get-Item 'devcert.key').FullName
+
+```
+
+This will produce a ```devcert.pem``` and a ```devcert.key``` file that you can rever to (with full pathname) from the App.config or using command line parameters.
+Listening to 127.0.0.1 should then allow you to connect securely on https://localhost:14011
+
+On linux it might be easier to just create the certificate yourself with OpenSSL than battle with the devcerts, I am honestly not sure what is the least amount of hassle and it likely
+depends on your distribution. 
+
+## Using cert bot
+If you want to use proper certificates to allow for being a proper webserver, the cheapest way is to use Let's Encrypt. Instructions are given here.
+This does require you to own a domain to properly verify the name. I am using DNS verification so that is what I have documented,
+but you need to be able to verify that you own the domain somehow. Details are given in the Let's Encrypt/certbot documentation.
+
+
 Download [certbot](https://certbot.eff.org/).
 Run PowerShell as admin.
 
@@ -29,7 +64,7 @@ certbot certonly --manual --preferred-challenges dns
 ```
 
 Fill in desired domain name, and then create a TXT record as described in your DNS and then you have the certificates in the required format.
-Point to the certificate by updating the App.config or 
+Point to the certificate by updating the App.config or
 
 ```
 dotnet run --ip 127.0.0.1 --port 443 --certpemfilepath c:\Certbot\live\artisanal.bjartnes.dev\fullchain.pem --keypemfilepath c:\Certbot\live\artisanal.bjartnes.dev\privkey.pem

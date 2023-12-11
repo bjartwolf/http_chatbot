@@ -8,7 +8,7 @@ open Avalonia.Controls.Primitives
 let view (selectedContextRecieved: string) (selectedContentSent: string) =
     Grid.create [
         Grid.margin (10,0,0,0)
-        Grid.rowDefinitions "20,50*,1*,50*" 
+        Grid.rowDefinitions "25,50*,1*,50*" 
         Grid.children[
             TextBlock.create [
                 Grid.row 0
@@ -42,7 +42,7 @@ let view (selectedContextRecieved: string) (selectedContentSent: string) =
 
             Grid.create [
                 Grid.row 3
-                Grid.rowDefinitions "20,50*" 
+                Grid.rowDefinitions "25,50*" 
                 Grid.children [
                      TextBlock.create [
                         Grid.row 0
