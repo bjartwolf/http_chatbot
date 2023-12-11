@@ -27,10 +27,11 @@ let view (selectedContextRecieved: string) (selectedContentSent: string) =
                         ScrollViewer.verticalScrollBarVisibility ScrollBarVisibility.Visible
                         Grid.row 0
                         ScrollViewer.content (
-                             TextBlock.create [
-                                TextBlock.horizontalScrollBarVisibility ScrollBarVisibility.Disabled
-                                TextBlock.verticalScrollBarVisibility ScrollBarVisibility.Disabled
-                                TextBlock.text selectedContextRecieved 
+                             TextBox.create [
+                                TextBox.horizontalScrollBarVisibility ScrollBarVisibility.Disabled
+                                TextBox.verticalScrollBarVisibility ScrollBarVisibility.Disabled
+                                TextBox.text selectedContextRecieved 
+                                TextBox.isReadOnly true
                             ]
                         )
                     ]
@@ -61,10 +62,11 @@ let view (selectedContextRecieved: string) (selectedContentSent: string) =
                                 ScrollViewer.verticalScrollBarVisibility ScrollBarVisibility.Visible
                                 ScrollViewer.content (
 
-                                    TextBlock.create [
-                                        TextBlock.horizontalScrollBarVisibility ScrollBarVisibility.Disabled
-                                        TextBlock.verticalScrollBarVisibility ScrollBarVisibility.Disabled
-                                        TextBlock.text selectedContentSent 
+                                    TextBox.create [
+                                        TextBox.horizontalScrollBarVisibility ScrollBarVisibility.Disabled
+                                        TextBox.verticalScrollBarVisibility ScrollBarVisibility.Disabled
+                                        TextBox.text selectedContentSent 
+                                        TextBox.isReadOnly true
                                     ]
                                 )
                            ]
